@@ -16,6 +16,7 @@ namespace Opentieba
     }
     public static class _
     {
+        public const bool __debug__=true;
         public static String sendHttp(String url, String fun, String post, String cookie)
         {
             WebClient wclient = new WebClient();
@@ -29,7 +30,11 @@ namespace Opentieba
             }
             catch (WebException e)
             {
-                return "";
+                if (__debug__ == true)
+                {
+                    throw e;
+                }
+                return "-------WebERROR";
             }
         }
         public static String encodeURIComponent(String st)
@@ -69,7 +74,7 @@ namespace Opentieba
             }
             String sign=_stbapi.toSign(pbdata);
             pbdata+="&sign="+sign;
-            return _.sendHttp("http://c.tieba.baidu.com" + fpath, "POST", post, "");
+            return _.sendHttp("http://c.tieba.baidu.com" + fpath, "POST", pbdata, "");
         }
         /// <summary>
         /// 此函数实现感谢 <a href="http://www.baidu.com/p/877120274">@877120274</a> (面包)
@@ -78,7 +83,7 @@ namespace Opentieba
         /// <returns>sign值</returns>
         public static String toSign(String str){
             string[] buffer = str.Split('&');
-            Array.Sort(buffer, new ASCIIComparer());
+            Array.Sort(buffer);
             var md5CSP = new System.Security.Cryptography.MD5CryptoServiceProvider();
             byte[] md5Result = md5CSP.ComputeHash(Encoding.UTF8.GetBytes(HttpUtility.UrlDecode(string.Join("", buffer)) + "tiebaclient!!!"));
             string ret = "";

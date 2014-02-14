@@ -49,7 +49,7 @@ namespace Opentieba
         public bar(String kw)
         {
             this.kw = kw;
-            String jon=_stbapi.sendTieba("http://c.tieba.baidu.com/c/f/frs/page", "kw=" + _.encodeURIComponent(kw) +
+            String jon=_stbapi.sendTieba("/c/f/frs/page", "kw=" + _.encodeURIComponent(kw) +
                 "&is_good=0&pn=1", "");
             barinfo = JSON.parse(jon);
             JEnumerable<JToken> fromgr = barinfo["forum"]["managers"].Children();
