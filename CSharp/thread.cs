@@ -212,8 +212,13 @@ namespace Opentieba
             }
             if (jy["bsize"] != null)
             {
-                bsize = (int[])from String p in jy["bsize"].Value<String>().Split(",".ToCharArray())
-                               select Int32.Parse(p);
+                String[] pb = jy["bsize"].Value<String>().Split(",".ToCharArray());
+                List<int> ps = new List<int>();
+                foreach (String ts in pb)
+                {
+                    ps.Add(int.Parse(ts));
+                }
+                bsize = ps.ToArray();
             }
             return new postContent(type, text, link, c, bsize, src, uid);
         }
