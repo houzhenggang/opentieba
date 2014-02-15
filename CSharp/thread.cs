@@ -243,4 +243,59 @@ namespace Opentieba
             this.title = title;
         }
     }
+    public class PostNotFindField : TiebaField
+    {
+        public PostNotFindField(int ec, String em) : base(new EntryResult(), ec, em) { }
+    }
+    public class TiePost
+    {
+        public readonly userInBar author;
+        public readonly postContent[] content;
+        public readonly long id;
+        public readonly long tid;
+        public readonly long time;
+        public readonly long maxPage;
+        public TiePost(long pid, long tid)
+        {
+            JToken tiejt=JSON.parse(_stbapi.sendTieba("/c/f/pb/floor", "kz=" + tid + "&pid=" + pid + "&pn=1", ""));
+            if (tiejt["error_code"].Value<int>() != 0)
+            {
+                throw new PostNotFindField(tiejt["error_code"].Value<int>(), tiejt["error_msg"].Value<String>());
+            }
+            maxPage = tiejt["page"]["total_page"].Value<long>();
+            this.tid = tiejt["thread"]["id"].Value<long>();
+            author = new userInBar(tiejt["post"]["author"]["id"].Value<long>(), tiejt["post"]["author"]["name"].Value<String>(),
+                tiejt["post"]["author"]["is_like"].Value<bool>(), tiejt["post"]["author"]["level_id"].Value<int>(),
+                tiejt["post"]["author"]["portrait"].Value<String>());
+            JToken[] jt = tiejt["post"]["content"].Children().ToArray<JToken>();
+            List<postContent> lpc = new List<postContent>();
+            foreach (JToken jcont in jt)
+            {
+                lpc.Add(postContent.byJtoken(jcont));
+            }
+            content = lpc.ToArray();
+            id = tiejt["post"]["id"].Value<long>();
+            time = tiejt["post"]["time"].Value<long>();
+        }
+        public List<basePost> listSubPost(long pn)
+        {
+            JToken tiejt = JSON.parse(_stbapi.sendTieba("/c/f/pb/floor", "kz=" + tid + "&pid=" + id + "&pn="+pn, ""));
+            JEnumerable<JToken> suli = tiejt["subpost_list"].Children();
+            List<basePost> lbc = new List<basePost>();
+            foreach (JToken pjt in suli)
+            {
+                JEnumerable<JToken> jejt = pjt["content"].Children();
+                List<postContent> lpc = new List<postContent>();
+                foreach (JToken conjte in jejt)
+                {
+                    lpc.Add(postContent.byJtoken(conjte));
+                }
+                postContent[] pce=lpc.ToArray();
+                lbc.Add(new basePost(new userInBar(pjt["author"]["id"].Value<long>(), pjt["author"]["name"].Value<String>(),
+                    false, 0, pjt["author"]["portrait"].Value<String>()), pce, 0, pjt["id"].Value<long>(), 0, pjt["time"].Value<long>(),
+                    ""));
+            }
+            return lbc;
+        }
+    }
 }
