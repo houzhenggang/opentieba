@@ -72,10 +72,15 @@ namespace Opentieba
             maxPage = th["page"]["total_page"].Value<long>();
             title = th["thread"]["title"].Value<String>();
             reply_num = th["thread"]["reply_num"].Value<long>();
-            author = new user(th["thread"]["author"]["id"].Value<long>(),
-                th["thread"]["author"]["name"].Value<String>());
+            author = new userInBar(th["thread"]["author"]["id"].Value<long>(),
+                th["thread"]["author"]["name"].Value<String>(), th["thread"]["author"]["is_like"].Value<bool>(),
+                th["thread"]["author"]["level_id"].Value<int>(), th["thread"]["author"]["portrait"].Value<String>());
             maxPage = th["page"]["total_page"].Value<long>();
             kw = new bar(th["forum"]["name"].Value<String>());
         }
+    }
+    public class basePost
+    {
+
     }
 }

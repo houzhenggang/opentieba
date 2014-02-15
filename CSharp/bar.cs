@@ -48,10 +48,10 @@ namespace Opentieba
         /// <summary>
         /// 此吧大吧主的user数组
         /// </summary>
-        public readonly List<user> Managers=new List<user>();
+        public readonly List<user> Managers = new List<user>();
         protected readonly JObject barinfo;
         public readonly long maxPage;
-        public readonly List<goodclassflyItem> gdclasses=new List<goodclassflyItem>();
+        public readonly List<goodclassflyItem> gdclasses = new List<goodclassflyItem>();
         /// <summary>
         /// 根据吧名称构建一个“吧对象”
         /// </summary>
@@ -59,7 +59,7 @@ namespace Opentieba
         public bar(String kw)
         {
             this.kw = kw;
-            String jon=_stbapi.sendTieba("/c/f/frs/page", "kw=" + _.encodeURIComponent(kw) +
+            String jon = _stbapi.sendTieba("/c/f/frs/page", "kw=" + _.encodeURIComponent(kw) +
                 "&is_good=0&pn=1", "");
             barinfo = JSON.parse(jon);
             if (barinfo["error_code"].Value<int>() != 0)
@@ -70,9 +70,9 @@ namespace Opentieba
             JEnumerable<JToken> fromgr = barinfo["forum"]["managers"].Children();
             foreach (JToken jt in fromgr)
             {
-                Managers.Add(new user(jt["id"].Value<long>(),jt["name"].Value<String>()));
+                Managers.Add(new user(jt["id"].Value<long>(), jt["name"].Value<String>()));
             }
-            JEnumerable<JToken> frgc=barinfo["forum"]["good_classify"].Children();
+            JEnumerable<JToken> frgc = barinfo["forum"]["good_classify"].Children();
             foreach (JToken jt in frgc)
             {
                 gdclasses.Add(new goodclassflyItem(kw, jt["class_name"].Value<String>(),
@@ -82,14 +82,15 @@ namespace Opentieba
         public List<basethread> listThreads(long page)
         {
             String jon = _stbapi.sendTieba("/c/f/frs/page", "kw=" + _.encodeURIComponent(kw) +
-                "&is_good=0&pn="+page, "");
+                "&is_good=0&pn=" + page, "");
             JEnumerable<JToken> threadlist = JSON.parse(jon)["thread_list"].Children();
             List<basethread> lt = new List<basethread>();
             foreach (JToken jt in threadlist)
             {
-                lt.Add(new basethread(jt["tid"].Value<long>(),jt["title"].Value<String>(),
-                    jt["reply_num"].Value<long>(),jt["last_time_int"].Value<long>(),(jt["is_top"].Value<Int16>()==1?true:false),
-                    (jt["is_good"].Value<Int16>() == 1 ? true : false), new user(jt["author"]["id"].Value<int>(), jt["author"]["name"].Value<String>()), kw));
+                lt.Add(new basethread(jt["tid"].Value<long>(), jt["title"].Value<String>(),
+                    jt["reply_num"].Value<long>(), jt["last_time_int"].Value<long>(), (jt["is_top"].Value<Int16>() == 1 ? true : false),
+                    (jt["is_good"].Value<Int16>() == 1 ? true : false), new userWithPic(jt["author"]["id"].Value<int>(),
+                        jt["author"]["name"].Value<String>(), jt["author"]["portrait"].Value<String>()), kw));
             }
             return lt;
         }

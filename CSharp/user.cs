@@ -44,4 +44,24 @@ namespace Opentieba
             //TODO: 使用“看机器猫吧”的方式返回USERID和UNAME
         }
     }
+    public class userInBar : userWithPic
+    {
+        public readonly bool is_like;
+        public readonly int level_id;
+        public userInBar(long uid, String n, bool islike, int lid, String pic)
+            : base(uid, n, pic)
+        {
+            is_like = islike;
+            level_id = lid;
+        }
+    }
+    public class userWithPic : user
+    {
+        public readonly String portrait;
+        public userWithPic(long uid, String n, String pic)
+            : base(uid, n)
+        {
+            portrait = pic;
+        }
+    }
 }
