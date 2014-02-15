@@ -10,14 +10,14 @@ namespace Opentieba
 {
     public static class JSON
     {
-        public static JObject parse(string json) {
+        public static JObject parse(String json) {
             return JsonConvert.DeserializeObject<JObject>(json);
         }
     }
     public static class _
     {
         public const bool __debug__=true;
-        public static string sendHttp(string url, string fun, string post, string cookie)
+        public static String sendHttp(String url, String fun, String post, String cookie)
         {
             WebClient wclient = new WebClient();
             wclient.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
@@ -26,7 +26,7 @@ namespace Opentieba
             }
             try
             {
-                return wclient.Uploadstring(url, fun, post);
+                return wclient.UploadString(url, fun, post);
             }
             catch (WebException e)
             {
@@ -37,13 +37,13 @@ namespace Opentieba
                 return "-------WebERROR";
             }
         }
-        public static string encodeURIComponent(string st) // 这里不是解码，是编码
+        public static String encodeURIComponent(String st)
         {
-            return HttpUtility.UrlEncode(st).ToUpper();
+            return HttpUtility.UrlEncode(st);
         }
-        public static string base64enc(string str)
+        public static String base64enc(String str)
         {
-            return Convert.ToBase64string(Encoding.UTF8.GetBytes(str));
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(str));
         }
     }
     class ASCIIComparer : IComparer<string>
@@ -56,9 +56,9 @@ namespace Opentieba
             if (b_.Length < a_.Length) Array.Resize<byte>(ref b_, a_.Length);
             for (int i = 0; i < a_.Length; ++i)
             {
-                //System.Diagnostics.Debug.Write(a_[i]);
-                //System.Diagnostics.Debug.Write(" ");
-                //System.Diagnostics.Debug.WriteLine(b_[i]);
+                System.Diagnostics.Debug.Write(a_[i]);
+                System.Diagnostics.Debug.Write(" ");
+                System.Diagnostics.Debug.WriteLine(b_[i]);
                 if (a_[i] < b_[i]) return -1;
                 if (a_[i] > b_[i]) return 1;
             }
@@ -66,13 +66,13 @@ namespace Opentieba
         }
     }
     public static class _stbapi {
-        public static string sendTieba(string fpath, string post, string bduss) {
-            string pbdata="BDUSS="+_.encodeURIComponent(bduss)+"&_client_id=a0112ba8-b146-45c5-bb18-5b9fdde4917b&_client_type=4&_client_version=1.3.3&_phone_imei="+
+        public static String sendTieba(String fpath, String post, String bduss) {
+            String pbdata="BDUSS="+_.encodeURIComponent(bduss)+"&_client_id=a0112ba8-b146-45c5-bb18-5b9fdde4917b&_client_type=4&_client_version=1.3.3&_phone_imei="+
                 "05-00-54-20-06-00-01-00-04-00-9C-35-01-00-26-28-02-00-24-14-09-00-32-53&net_type=3";
             if(post.Length>0){
                 pbdata+="&"+post;
             }
-            string sign=_stbapi.toSign(pbdata);
+            String sign=_stbapi.toSign(pbdata);
             pbdata+="&sign="+sign;
             return _.sendHttp("http://c.tieba.baidu.com" + fpath, "POST", pbdata, "");
         }
@@ -81,20 +81,23 @@ namespace Opentieba
         /// </summary>
         /// <param name="str">POST数据</param>
         /// <returns>sign值</returns>
-        public static string toSign(string str){
+        public static String toSign(String str){
             string[] buffer = str.Split('&');
-            Array.Sort(buffer, ASCIIComparer); // 不要擅自使用系统自带的排序器
+            Array.Sort(buffer, new ASCIIComparer());
             var md5CSP = new System.Security.Cryptography.MD5CryptoServiceProvider();
             byte[] md5Result = md5CSP.ComputeHash(Encoding.UTF8.GetBytes(HttpUtility.UrlDecode(string.Join("", buffer)) + "tiebaclient!!!"));
             string ret = "";
             foreach (byte i in md5Result)
             {
-                ret += i.Tostring("x2");
+                ret += i.ToString("x2");
             }
-            return ret;
+            return ret.ToUpper();
         }
     }
     public interface TiebaResult
+    {
+    }
+    public class EntryResult : TiebaResult
     {
     }
     /// <summary>
@@ -113,8 +116,8 @@ namespace Opentieba
         /// <summary>
         /// 错误文本描述
         /// </summary>
-        public readonly string error_msg;
-        public TiebaField(TiebaResult tr, int errcode, string errmsg)
+        public readonly String error_msg;
+        public TiebaField(TiebaResult tr, int errcode, String errmsg)
         {
             tbres = tr;
             error_code = errcode;

@@ -9,11 +9,10 @@ namespace Opentieba
 {
     public class goodclassflyItem
     {
-        public readonly string kw;
-        public readonly string name;
-        public readonly short id;
-        
-        public goodclassflyItem(string kw, string name, short id)
+        public readonly String kw;
+        public readonly String name;
+        public readonly Int16 id;
+        public goodclassflyItem(String kw, String name, Int16 id)
         {
             this.kw = kw;
             this.name = name;
@@ -24,6 +23,15 @@ namespace Opentieba
             return null;
         }
     }
+    public class SeeBarField : TiebaField
+    {
+        public readonly String kw;
+        public SeeBarField(String kw, int errcode, String errmsg)
+            : base(new EntryResult(), errcode, errmsg)
+        {
+            this.kw = kw;
+        }
+    }
     /// <summary>
     /// 表示一个吧。
     /// </summary>
@@ -32,50 +40,56 @@ namespace Opentieba
         /// <summary>
         /// 吧名称
         /// </summary>
-        public readonly string kw;
+        public readonly String kw;
         /// <summary>
         /// 贴吧fid
         /// </summary>
-        public readonly string fid;
+        public readonly String fid;
         /// <summary>
         /// 此吧大吧主的user数组
         /// </summary>
         public readonly List<user> Managers=new List<user>();
         protected readonly JObject barinfo;
+        public readonly long maxPage;
         public readonly List<goodclassflyItem> gdclasses=new List<goodclassflyItem>();
         /// <summary>
         /// 根据吧名称构建一个“吧对象”
         /// </summary>
         /// <param name="kw">吧名</param>
-        public bar(string kw)
+        public bar(String kw)
         {
             this.kw = kw;
-            string jon=_stbapi.sendTieba("/c/f/frs/page", "kw=" + _.encodeURIComponent(kw) +
+            String jon=_stbapi.sendTieba("/c/f/frs/page", "kw=" + _.encodeURIComponent(kw) +
                 "&is_good=0&pn=1", "");
             barinfo = JSON.parse(jon);
+            if (barinfo["error_code"].Value<int>() != 0)
+            {
+                throw new SeeBarField(kw, barinfo["error_code"].Value<int>(), barinfo["error_msg"].Value<String>());
+            }
+            maxPage = barinfo["page"]["total_page"].Value<long>();
             JEnumerable<JToken> fromgr = barinfo["forum"]["managers"].Children();
             foreach (JToken jt in fromgr)
             {
-                Managers.Add(new user(jt["id"].Value<long>(),jt["name"].Value<string>()));
+                Managers.Add(new user(jt["id"].Value<long>(),jt["name"].Value<String>()));
             }
             JEnumerable<JToken> frgc=barinfo["forum"]["good_classify"].Children();
             foreach (JToken jt in frgc)
             {
-                gdclasses.Add(new goodclassflyItem(kw, jt["class_name"].Value<string>(),
-                    jt["class_id"].Value<short>()));
+                gdclasses.Add(new goodclassflyItem(kw, jt["class_name"].Value<String>(),
+                    jt["class_id"].Value<Int16>()));
             }
         }
         public List<basethread> listThreads(long page)
         {
-            string jon = _stbapi.sendTieba("http://c.tieba.baidu.com/c/f/frs/page", "kw=" + _.encodeURIComponent(kw) +
+            String jon = _stbapi.sendTieba("/c/f/frs/page", "kw=" + _.encodeURIComponent(kw) +
                 "&is_good=0&pn="+page, "");
             JEnumerable<JToken> threadlist = JSON.parse(jon)["thread_list"].Children();
             List<basethread> lt = new List<basethread>();
             foreach (JToken jt in threadlist)
             {
-                lt.Add(new basethread(jt["tid"].Value<long>(),jt["title"].Value<string>(),
-                    jt["reply_num"].Value<long>(),jt["last_time_int"].Value<long>(),(jt["is_top"].Value<short>()==1?true:false),
-                    (jt["is_good"].Value<short>() == 1 ? true : false),new user(jt["author"]["name"].Value<string>()),kw));
+                lt.Add(new basethread(jt["tid"].Value<long>(),jt["title"].Value<String>(),
+                    jt["reply_num"].Value<long>(),jt["last_time_int"].Value<long>(),(jt["is_top"].Value<Int16>()==1?true:false),
+                    (jt["is_good"].Value<Int16>() == 1 ? true : false), new user(jt["author"]["id"].Value<int>(), jt["author"]["name"].Value<String>()), kw));
             }
             return lt;
         }
