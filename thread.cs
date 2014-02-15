@@ -9,15 +9,15 @@ namespace Opentieba
     public class basethread
     {
         public readonly long tid;
-        public readonly String title;
+        public readonly string title;
         public readonly long reply_num;
         public readonly long last_time;
         public readonly bool is_top;
         public readonly bool is_good;
         public readonly user author;
-        public readonly String kw;
-        public basethread(long tid, String title, long reply_num, long last_time, bool is_top,
-            bool is_good,user author,String kw)
+        public readonly string kw;
+        public basethread(long tid, string title, long reply_num, long last_time, bool is_top,
+            bool is_good,user author,string kw)
         {
             this.tid = tid;
             this.title = title;
