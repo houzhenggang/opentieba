@@ -191,14 +191,17 @@ namespace Opentieba
         public static postContent byJtoken(JToken jy)
         {
             int type;
-            String text;
+            String text = "[?]";
             String link = "";
             String c = "";
             int[] bsize = { 0, 0 };
             String src = "";
             long uid = 0;
             type = jy["type"].Value<int>();
-            text = jy["text"].Value<String>();
+            if (jy["text"] != null)
+            {
+                text = jy["text"].Value<String>();
+            }
             if (jy["link"] != null)
             {
                 link = jy["link"].Value<String>();
