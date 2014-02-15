@@ -7,9 +7,9 @@
  */
 (function () {
     function ifnoerror(q) {
-        if (q.ztm != 200) {
+        if (q.body.length == 0) {
             return false;
-        } else if (q.body == "" || q.body == null || q.body == undefined) {
+        } else if (q.body.match(/^\{.+\}$/)==null) {
             return false;
         } else {
             return true;
@@ -44,7 +44,9 @@
                 "05-00-54-20-06-00-01-00-04-00-9C-35-01-00-26-28-02-00-24-14-09-00-32-53&net_type=3&" + post);
             var joinednoandargs = decodeURIComponent(allpost).split("&").sort().join("");
             return _.md5sun(joinednoandargs + "tiebaclient!!!");
-        })(), 80, hdd);
+        })(), 80, function(q){
+            return {q.body: q};
+        });
     }
     _s.tiebaApi.getLikeKWs = function (hdd) {
         if (_s.tiebaApi.getBduss() == "") {
