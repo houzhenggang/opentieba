@@ -16,7 +16,7 @@ namespace Opentieba
     }
     public static class _
     {
-        public const bool __debug__=true;
+        public const bool __debug__=false;
         public static String sendHttp(String url, String fun, String post, String cookie)
         {
             WebClient wclient = new WebClient();
