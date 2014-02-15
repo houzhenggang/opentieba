@@ -12,8 +12,8 @@ Opentieba alpha v0.0
 =========
 
 <p>Now Opentieba has two language: </p>
-1. Opentieba For C-Sharp: folder “CSharp”<br />
-2. Opentieba For JavaScript: folder “JS”<br />
+1.Opentieba For C-Sharp: folder “CSharp”<br />
+2.Opentieba For JavaScript: folder “JS”<br />
 <br />
 <p>Opentieba For JS Configuration method: </p>
 Change sendTieba to the function(Send packets)<br />
