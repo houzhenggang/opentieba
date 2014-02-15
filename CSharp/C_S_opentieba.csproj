@@ -47,9 +47,11 @@
     <Compile Include="bar.cs" />
     <Compile Include="BDUSS.cs" />
     <Compile Include="NS.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="thread.cs" />
     <Compile Include="user.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
