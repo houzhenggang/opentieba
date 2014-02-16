@@ -56,9 +56,6 @@ namespace Opentieba
             if (b_.Length < a_.Length) Array.Resize<byte>(ref b_, a_.Length);
             for (int i = 0; i < a_.Length; ++i)
             {
-                System.Diagnostics.Debug.Write(a_[i]);
-                System.Diagnostics.Debug.Write(" ");
-                System.Diagnostics.Debug.WriteLine(b_[i]);
                 if (a_[i] < b_[i]) return -1;
                 if (a_[i] > b_[i]) return 1;
             }
