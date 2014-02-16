@@ -32,6 +32,22 @@ namespace Opentieba
             this.kw = kw;
         }
     }
+    public class baseBar
+    {
+        /// <summary>
+        /// 吧名称
+        /// </summary>
+        public readonly String kw;
+        /// <summary>
+        /// 贴吧fid
+        /// </summary>
+        public readonly long fid;
+        public baseBar(String kw, long fid)
+        {
+            this.kw = kw;
+            this.fid = fid;
+        }
+    }
     /// <summary>
     /// 表示一个吧。
     /// </summary>

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 namespace Opentieba
 {
     public class LoginResult : TiebaResult
@@ -106,6 +107,16 @@ namespace Opentieba
             : base(tr, errcode, errmsg)
         {
             tbres = tr;
+        }
+    }
+    public class addPostField : TiebaField
+    {
+        public readonly String vcodeurl, vcodemd5;
+        public addPostField(int code, String msg, String vcodeurl, String vcodemd5)
+            : base(new EntryResult(), code, msg)
+        {
+            this.vcodeurl = vcodeurl;
+            this.vcodemd5 = vcodemd5;
         }
     }
     /// <summary>
@@ -220,6 +231,51 @@ namespace Opentieba
             }
             return new addThreadResult(0, "", res["tid"].Value<long>(), kw, false, "", "");
         }
+        public void addPost(String content, TieThread thread, long toFloor, TiePost FloorPost, String vcodemd5, String vcode)
+        {
+            long tofloorpid = 0;
+            if (FloorPost != null)
+            {
+                tofloorpid = FloorPost.id;
+            }
+            String tbs = getTbs();
+            JToken resjt = JSON.parse(_stbapi.sendTieba("/c/c/post/add", "content=" + _.encodeURIComponent(content) + "&floor_num=" +
+                toFloor + "&kw=" + thread.kw.kw + "&tid=" + thread.tid + "&vcode=" + _.encodeURIComponent(vcode) + "&vcode_md5=" + vcodemd5 +
+                "&tbs=" + tbs + "&quote_id=" + tofloorpid + "&fid=" + thread.kw.fid, bduss));
+            if (resjt["error_code"].Value<int>() != 0)
+            {
+                try
+                {
+                    if (resjt["info"]["need_vcode"].Value<bool>())
+                    {
+                        /*throw new AddThreadField(new addThreadResult(res["error_code"].Value<int>(), res["error_msg"].Value<String>(),
+                            0, kw, true, res["info"]["vcode_pic_url"].Value<String>(), res["info"]["vcode_md5"].Value<String>())
+                            , res["error_code"].Value<int>(), res["error_msg"].Value<String>());*/
+                        throw new addPostField(resjt["error_code"].Value<int>(), resjt["error_msg"].Value<String>(),
+                            resjt["info"]["vcode_pic_url"].Value<String>(), resjt["info"]["vcode_md5"].Value<String>());
+                    }
+                    else
+                    {
+                        throw new NullReferenceException();
+                    }
+                }
+                catch (NullReferenceException e)
+                {
+                    throw new addPostField(resjt["error_code"].Value<int>(), resjt["error_msg"].Value<String>(),
+                            "", "");
+                }
+                catch (ArgumentNullException e)
+                {
+                    throw new addPostField(resjt["error_code"].Value<int>(), resjt["error_msg"].Value<String>(),
+                            "", "");
+                }
+                catch (InvalidOperationException e)
+                {
+                    throw new addPostField(resjt["error_code"].Value<int>(), resjt["error_msg"].Value<String>(),
+                            "", "");
+                }
+            }
+        }
         /// <summary>
         /// 获得TBS
         /// </summary>
@@ -235,6 +291,31 @@ namespace Opentieba
             {
                 throw new TiebaField(new EntryResult(), -1, "BDUSS不正确");
             }
+        }
+        public ListBarResult listLike(int page)
+        {
+            JObject bjx = JSON.parse(_stbapi.sendTieba("/c/f/forum/favolike", "pn=" + page, bduss));
+            if (bjx["error_code"].Value<int>() != 0)
+            {
+                throw new TiebaField(new EntryResult(), bjx["error_code"].Value<int>(), bjx["error_msg"].Value<String>());
+            }
+            JEnumerable<JToken> jet = bjx["forum_list"].Children();
+            List<baseBar> lb = new List<baseBar>();
+            foreach (JToken tok in jet)
+            {
+                lb.Add(new baseBar(tok["name"].Value<String>(),tok["forum_id"].Value<long>()));
+            }
+            return new ListBarResult(lb.ToArray(), bjx["page"]["total_page"].Value<int>());
+        }
+    }
+    public class ListBarResult : TiebaResult
+    {
+        public readonly baseBar[] likebars;
+        public readonly int maxPage;
+        public ListBarResult(baseBar[] lb, int pg)
+        {
+            likebars = lb;
+            maxPage = pg;
         }
     }
 }
