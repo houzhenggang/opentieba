@@ -205,7 +205,17 @@ namespace Opentieba
                 catch (NullReferenceException e)
                 {
                     throw new AddThreadField(new addThreadResult(res["error_code"].Value<int>(), res["error_msg"].Value<String>(),
-                        0, kw, true, "", ""), res["error_code"].Value<int>(), res["error_msg"].Value<String>());
+                        0, kw, false, "", ""), res["error_code"].Value<int>(), res["error_msg"].Value<String>());
+                }
+                catch (ArgumentNullException e)
+                {
+                    throw new AddThreadField(new addThreadResult(res["error_code"].Value<int>(), res["error_msg"].Value<String>(),
+                        0, kw, false, "", ""), res["error_code"].Value<int>(), res["error_msg"].Value<String>());
+                }
+                catch (InvalidOperationException e)
+                {
+                    throw new AddThreadField(new addThreadResult(res["error_code"].Value<int>(), res["error_msg"].Value<String>(),
+                        0, kw, false, "", ""), res["error_code"].Value<int>(), res["error_msg"].Value<String>());
                 }
             }
             return new addThreadResult(0, "", res["tid"].Value<long>(), kw, false, "", "");

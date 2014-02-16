@@ -63,6 +63,7 @@ namespace Opentieba
         }
     }
     public static class _stbapi {
+        public static readonly String versions = "dab421ab4377f5c7a8cccc320c7851021f5049d8";
         public static String sendTieba(String fpath, String post, String bduss) {
             String pbdata="BDUSS="+_.encodeURIComponent(bduss)+"&_client_id=a0112ba8-b146-45c5-bb18-5b9fdde4917b&_client_type=4&_client_version=1.3.3&_phone_imei="+
                 "05-00-54-20-06-00-01-00-04-00-9C-35-01-00-26-28-02-00-24-14-09-00-32-53&net_type=3";
