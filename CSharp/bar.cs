@@ -44,7 +44,7 @@ namespace Opentieba
         /// <summary>
         /// 贴吧fid
         /// </summary>
-        public readonly String fid;
+        public readonly long fid;
         /// <summary>
         /// 此吧大吧主的user数组
         /// </summary>
@@ -78,7 +78,13 @@ namespace Opentieba
                 gdclasses.Add(new goodclassflyItem(kw, jt["class_name"].Value<String>(),
                     jt["class_id"].Value<Int16>()));
             }
+            fid = barinfo["forum"]["id"].Value<long>();
         }
+        /// <summary>
+        /// 列出该吧所有主题
+        /// </summary>
+        /// <param name="page">页数</param>
+        /// <returns>一个basethread组成的List组</returns>
         public List<basethread> listThreads(long page)
         {
             String jon = _stbapi.sendTieba("/c/f/frs/page", "kw=" + _.encodeURIComponent(kw) +

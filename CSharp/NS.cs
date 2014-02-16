@@ -17,7 +17,7 @@ namespace Opentieba
     public static class _
     {
         public const bool __debug__=false;
-        public static String sendHttp(String url, String fun, String post, String cookie)
+        public static String sendHttp(String url, String post, String cookie)
         {
             WebClient wclient = new WebClient();
             wclient.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
@@ -26,7 +26,7 @@ namespace Opentieba
             }
             try
             {
-                return wclient.UploadString(url, fun, post);
+                return wclient.UploadString(url, "POST", post);
             }
             catch (WebException e)
             {
@@ -71,7 +71,7 @@ namespace Opentieba
             }
             String sign=_stbapi.toSign(pbdata);
             pbdata+="&sign="+sign;
-            return _.sendHttp("http://c.tieba.baidu.com" + fpath, "POST", pbdata, "");
+            return _.sendHttp("http://c.tieba.baidu.com" + fpath, pbdata, "");
         }
         /// <summary>
         /// 此函数实现感谢 <a href="http://www.baidu.com/p/877120274">@877120274</a> (面包)
