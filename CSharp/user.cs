@@ -15,16 +15,25 @@ namespace Opentieba
         {
             return this.username;
         }
+        /// <summary>
+        /// 构造一个user，省略查询uid的步骤
+        /// </summary>
+        /// <param name="userid">客户端UID</param>
+        /// <param name="username">用户名</param>
         public user(long userid, String username)
         {
             this.userid = userid;
             this.username = username;
         }
+        /// <summary>
+        /// 构造一个user
+        /// </summary>
+        /// <param name="username">用户名</param>
         public user(String username)
         {
             this.username = username;
-            String j=_.sendHttp("http://tieba.baidu.com/i/sys/user_json?un=" + _.encodeURIComponent(username)
-                + "&ie=utf-8", "GET", "", "");
+            String j = _.sendHttp("http://tieba.baidu.com/i/sys/user_json?un=" + _.encodeURIComponent(username)
+                + "&ie=utf-8", "", "");
             JObject json = JSON.parse(j);
             try
             {
