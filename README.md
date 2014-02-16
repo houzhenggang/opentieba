@@ -1,4 +1,4 @@
-Opentieba alpha v0.0
+Opentieba alpha v0.1
 =========
 
 <p>目前Opentieba支持多种语言：</p>
