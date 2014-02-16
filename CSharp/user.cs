@@ -41,7 +41,22 @@ namespace Opentieba
         /// <param name="bduss">bduss</param>
         protected user(String bduss,bool tru)
         {
-            //TODO: 使用“看机器猫吧”的方式返回USERID和UNAME
+            String jon = _stbapi.sendTieba("/c/f/frs/page", "kw=" + _.encodeURIComponent("机器猫") +
+                "&is_good=0&pn=1", bduss);
+            JToken barinfo = JSON.parse(jon);
+            if (barinfo["error_code"].Value<int>() != 0)
+            {
+                throw new SeeBarField("机器猫", barinfo["error_code"].Value<int>(), barinfo["error_msg"].Value<String>());
+            }
+            try
+            {
+                userid = barinfo["user"]["id"].Value<long>();
+                username = barinfo["user"]["name"].Value<String>();
+            }
+            catch (NullReferenceException e)
+            {
+                throw new LoginField(new LoginResult(false,"","",-1,"","",-1), -1, "BDUSS不正确");
+            }
         }
     }
     public class userInBar : userWithPic
