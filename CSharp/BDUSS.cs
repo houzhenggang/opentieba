@@ -50,6 +50,19 @@ namespace Opentieba
             bduss = f; uid = g;
         }
     }
+    public class messageNumResult : TiebaResult
+    {
+        public readonly long atme, bookmark, count, fans, pletter, replyme;
+        public messageNumResult(long am, long bm, long ct, long fa, long pl, long re)
+        {
+            atme = am;
+            bookmark = bm;
+            count = ct;
+            fans = fa;
+            pletter = pl;
+            replyme = re;
+        }
+    }
     public class addThreadResult : TiebaResult
     {
         /// <summary>
@@ -117,6 +130,38 @@ namespace Opentieba
         {
             this.vcodeurl = vcodeurl;
             this.vcodemd5 = vcodemd5;
+        }
+    }
+    public class MaxPageAndListResult<arrtype> : TiebaResult
+    {
+        public readonly List<arrtype> list;
+        public readonly long maxPage;
+        public MaxPageAndListResult(List<arrtype> lst, long maxPage)
+        {
+            list = lst;
+            this.maxPage = maxPage;
+        }
+    }
+    public class msgPost
+    {
+        public readonly String contentStr;
+        public readonly String fname;
+        public readonly bool is_floor;
+        public readonly long post_id;
+        public readonly userWithPic replyer;
+        public readonly long thread_id;
+        public readonly long time;
+        public readonly String title;
+        public msgPost(String content, String kw, bool isfloor, long pid, long tme, String tit, long tid, userWithPic uwp)
+        {
+            contentStr = content;
+            fname = kw;
+            is_floor = isfloor;
+            post_id = pid;
+            replyer = uwp;
+            thread_id = tid;
+            time = tme;
+            title = tit;
         }
     }
     /// <summary>
@@ -306,6 +351,87 @@ namespace Opentieba
                 lb.Add(new baseBar(tok["name"].Value<String>(),tok["forum_id"].Value<long>()));
             }
             return new ListBarResult(lb.ToArray(), bjx["page"]["total_page"].Value<int>());
+        }
+        public messageNumResult msgNum() {
+            JObject jb = JSON.parse(_stbapi.sendTieba("/c/s/msg", "", bduss));
+            if (jb["error_code"].Value<int>() != 0)
+            {
+                throw new TiebaField(new EntryResult(), jb["error_code"].Value<int>(), jb["error_msg"].Value<String>());
+            }
+            JToken jo = JSON.parse(_stbapi.sendTieba("/c/s/msg", "", bduss))["message"];
+            return new messageNumResult(jo["atme"].Value<long>(), jo["bookmark"].Value<long>(), jo["count"].Value<long>(),
+                jo["fans"].Value<long>(), jo["pletter"].Value<long>(), jo["replyme"].Value<long>());
+        }
+        public MaxPageAndListResult<msgPost> listMsg(String type, long page)
+        {
+            switch (type)
+            {
+                case "reply":
+                    {
+                        JObject rjo = JSON.parse(_stbapi.sendTieba("/c/u/feed/replyme", "pn=" + page + "&uid=" + getUid(), bduss));
+                        if (rjo["error_code"].Value<int>() != 0)
+                        {
+                            throw new TiebaField(new EntryResult(), rjo["error_code"].Value<int>(), rjo["error_msg"].Value<String>());
+                        }
+                        List<msgPost> tp = new List<msgPost>();
+                        JEnumerable<JToken> jejt = rjo["reply_list"].Children();
+                        foreach (JToken t in jejt)
+                        {
+                            tp.Add(new msgPost(t["content"].Value<String>(), t["fname"].Value<String>(), t["is_floor"].Value<bool>(),
+                                t["post_id"].Value<long>(), t["time"].Value<long>(), t["title"].Value<String>(), t["thread_id"].Value<long>(),
+                                new userWithPic(t["replyer"]["id"].Value<long>(), t["replyer"]["name"].Value<String>(), t["replyer"]["portrait"].Value<String>())));
+                        }
+                        return new MaxPageAndListResult<msgPost>(tp, rjo["page"]["has_more"].Value<long>());
+                    }
+                case "atme":
+                    {
+                        JObject rjo = JSON.parse(_stbapi.sendTieba("/c/u/feed/atme", "pn=" + page + "&uid=" + getUid(), bduss));
+                        if (rjo["error_code"].Value<int>() != 0)
+                        {
+                            throw new TiebaField(new EntryResult(), rjo["error_code"].Value<int>(), rjo["error_msg"].Value<String>());
+                        }
+                        List<msgPost> tp = new List<msgPost>();
+                        JEnumerable<JToken> jejt = rjo["at_list"].Children();
+                        foreach (JToken t in jejt)
+                        {
+                            tp.Add(new msgPost(t["content"].Value<String>(),t["fname"].Value<String>(),t["is_floor"].Value<bool>(),
+                                t["post_id"].Value<long>(),t["time"].Value<long>(),t["title"].Value<String>(),t["thread_id"].Value<long>(),
+                                new userWithPic(t["replyer"]["id"].Value<long>(),t["replyer"]["name"].Value<String>(),t["replyer"]["portrait"].Value<String>())));
+                        }
+                        return new MaxPageAndListResult<msgPost>(tp, rjo["page"]["has_more"].Value<long>());
+                    }
+                default:
+                    throw new ArgumentException("type参数不正确，此值只能为reply或atme");
+            }
+        }
+        public void delPost(long pid, long tid, bar kw)
+        {
+            String tbs = getTbs();
+            JObject jors = JSON.parse(_stbapi.sendTieba("/c/c/bawu/delpost", "z=" + tid + "&word=" + _.encodeURIComponent(kw.kw) + "&pid=" + pid + "&tbs=" + tbs,
+                bduss));
+            if (jors["error_code"].Value<int>() != 0)
+            {
+                throw new TiebaField(new EntryResult(), jors["error_code"].Value<int>(), jors["error_msg"].Value<String>());
+            }
+        }
+        public void delThread(long tid, bar kw)
+        {
+            String tbs = getTbs();
+            JObject jors = JSON.parse(_stbapi.sendTieba("/c/c/bawu/delthread", "z=" + tid + "&word=" + _.encodeURIComponent(kw.kw) + "&tbs=" + tbs,
+                bduss));
+            if (jors["error_code"].Value<int>() != 0)
+            {
+                throw new TiebaField(new EntryResult(), jors["error_code"].Value<int>(), jors["error_msg"].Value<String>());
+            }
+        }
+        public void sign(bar kw)
+        {
+            String tbs = getTbs();
+            JObject jors = JSON.parse(_stbapi.sendTieba("/c/c/forum/sign", "kw=" + _.encodeURIComponent(kw.kw) + "&tbs=" + tbs, bduss));
+            if (jors["error_code"].Value<int>() != 0)
+            {
+                throw new TiebaField(new EntryResult(), jors["error_code"].Value<int>(), jors["error_msg"].Value<String>());
+            }
         }
     }
     public class ListBarResult : TiebaResult
