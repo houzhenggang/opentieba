@@ -215,15 +215,19 @@ namespace Opentieba
             }
         }
         /// <summary>
-        /// 使用给定BDUSS和用户名初始化一个BDUSS（通常来自ICID马甲）
+        /// 使用给定BDUSS初始化一个BDUSS（通常来自ICID马甲）
         /// </summary>
         /// <param name="bduss">BDUSS</param>
         public BDUSS(String bduss)
             : base(bduss, true)
         {
         }
-        public BDUSS(String bduss, String name)
-            : base(name)
+        /// <summary>
+        /// 使用给定BDUSS和用户名初始化一个BDUSS（通常来自ICID马甲）
+        /// </summary>
+        /// <param name="name">用户名</param>
+        /// <param name="bduss">BDUSS</param>
+        public BDUSS(String name, String bduss):base(name)
         {
             this.bduss = bduss;
         }
@@ -273,6 +277,11 @@ namespace Opentieba
                     throw new AddThreadField(new addThreadResult(res["error_code"].Value<int>(), res["error_msg"].Value<String>(),
                         0, kw, false, "", ""), res["error_code"].Value<int>(), res["error_msg"].Value<String>());
                 }
+                catch (ArgumentException e)
+                {
+                    throw new addPostField(res["error_code"].Value<int>(), res["error_msg"].Value<String>(),
+                            "", "");
+                }
             }
             return new addThreadResult(0, "", res["tid"].Value<long>(), kw, false, "", "");
         }
@@ -315,6 +324,11 @@ namespace Opentieba
                             "", "");
                 }
                 catch (InvalidOperationException e)
+                {
+                    throw new addPostField(resjt["error_code"].Value<int>(), resjt["error_msg"].Value<String>(),
+                            "", "");
+                }
+                catch (ArgumentException e)
                 {
                     throw new addPostField(resjt["error_code"].Value<int>(), resjt["error_msg"].Value<String>(),
                             "", "");

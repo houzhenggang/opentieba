@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="bar.cs" />
     <Compile Include="BDUSS.cs" />
+    <Compile Include="ICID.cs" />
     <Compile Include="NS.cs" />
     <Compile Include="thread.cs" />
     <Compile Include="user.cs" />
