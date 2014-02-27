@@ -9,6 +9,8 @@ Opentieba alpha 1
   修改 sendTieba 为发包函数。<br />
 <br />
 <br />
+官方网站：http://opentieba.dorab.org/
+<br />
 =========
 
 <p>Now Opentieba has two language: </p>
@@ -18,4 +20,6 @@ Opentieba alpha 1
 <p>Opentieba For JS Configuration method: </p>
 Change sendTieba to the function(Send packets)<br />
 <br />
+<br />
+Website：http://opentieba.dorab.org/
 <br />
