@@ -6,18 +6,33 @@ using System.IO;
 
 namespace Opentieba
 {
+    /// <summary>
+    /// 表示一个ICID文件
+    /// </summary>
     public class ICID : List<BDUSS>
     {
+        /// <summary>
+        /// 从文件流构造ICID
+        /// </summary>
+        /// <param name="fs"></param>
         public ICID(FileStream fs)
         {
             StreamReader sr = new StreamReader(fs);
             String p=sr.ReadToEnd();
             explainICID(p);
         }
+        /// <summary>
+        /// 从ICID格式字符串构造ICID
+        /// </summary>
+        /// <param name="icidStr">ICID字符串</param>
         public ICID(String icidStr)
         {
             explainICID(icidStr);
         }
+        /// <summary>
+        /// [内部调用]解析ICID
+        /// </summary>
+        /// <param name="icidStr"></param>
         protected void explainICID(String icidStr)
         {
             String[] lines = icidStr.Split("\n".ToCharArray());

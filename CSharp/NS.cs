@@ -8,15 +8,36 @@ using System.Web;
 
 namespace Opentieba
 {
+    /// <summary>
+    /// JSON
+    /// </summary>
     public static class JSON
     {
+        /// <summary>
+        /// 解析JSON
+        /// </summary>
+        /// <param name="json">json字符串</param>
+        /// <returns>JObject对象</returns>
         public static JObject parse(String json) {
             return JsonConvert.DeserializeObject<JObject>(json);
         }
     }
+    /// <summary>
+    /// opentieba核心类
+    /// </summary>
     public static class _
     {
+        /// <summary>
+        /// [内部调用]是否开启调试模式。
+        /// </summary>
         public const bool __debug__=false;
+        /// <summary>
+        /// [内部调用]发包
+        /// </summary>
+        /// <param name="url">url</param>
+        /// <param name="post">post</param>
+        /// <param name="cookie">cookie</param>
+        /// <returns></returns>
         public static String sendHttp(String url, String post, String cookie)
         {
             WebClient wclient = new WebClient();
@@ -37,10 +58,20 @@ namespace Opentieba
                 return "-------WebERROR";
             }
         }
+        /// <summary>
+        /// [内部调用]编码URL
+        /// </summary>
+        /// <param name="st"></param>
+        /// <returns></returns>
         public static String encodeURIComponent(String st)
         {
             return HttpUtility.UrlEncode(st);
         }
+        /// <summary>
+        /// [内部调用]编码base64
+        /// </summary>
+        /// <param name="str">字符串</param>
+        /// <returns>base64</returns>
         public static String base64enc(String str)
         {
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(str));

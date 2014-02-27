@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 namespace Opentieba
 {
+    /// <summary>
+    /// 登录结果
+    /// </summary>
     public class LoginResult : TiebaResult
     {
         /// <summary>
@@ -50,9 +53,14 @@ namespace Opentieba
             bduss = f; uid = g;
         }
     }
+    /// <summary>
+    /// 列出消息数目结果
+    /// </summary>
     public class messageNumResult : TiebaResult
     {
+#pragma warning disable 1591
         public readonly long atme, bookmark, count, fans, pletter, replyme;
+#pragma warning restore 1591
         public messageNumResult(long am, long bm, long ct, long fa, long pl, long re)
         {
             atme = am;
@@ -200,7 +208,7 @@ namespace Opentieba
                             login["error_msg"].Value<String>());
                     }
                 }
-                catch (NullReferenceException e)
+                catch (NullReferenceException)
                 {
                     throw new LoginField(new LoginResult(false, "", "", login["error_code"].Value<int>(),
                             login["error_msg"].Value<String>(), "", 0), login["error_code"].Value<int>(),
@@ -262,22 +270,22 @@ namespace Opentieba
                         throw new NullReferenceException();
                     }
                 }
-                catch (NullReferenceException e)
+                catch (NullReferenceException)
                 {
                     throw new AddThreadField(new addThreadResult(res["error_code"].Value<int>(), res["error_msg"].Value<String>(),
                         0, kw, false, "", ""), res["error_code"].Value<int>(), res["error_msg"].Value<String>());
                 }
-                catch (ArgumentNullException e)
+                catch (ArgumentNullException)
                 {
                     throw new AddThreadField(new addThreadResult(res["error_code"].Value<int>(), res["error_msg"].Value<String>(),
                         0, kw, false, "", ""), res["error_code"].Value<int>(), res["error_msg"].Value<String>());
                 }
-                catch (InvalidOperationException e)
+                catch (InvalidOperationException)
                 {
                     throw new AddThreadField(new addThreadResult(res["error_code"].Value<int>(), res["error_msg"].Value<String>(),
                         0, kw, false, "", ""), res["error_code"].Value<int>(), res["error_msg"].Value<String>());
                 }
-                catch (ArgumentException e)
+                catch (ArgumentException)
                 {
                     throw new addPostField(res["error_code"].Value<int>(), res["error_msg"].Value<String>(),
                             "", "");
@@ -294,7 +302,7 @@ namespace Opentieba
             }
             String tbs = getTbs();
             JToken resjt = JSON.parse(_stbapi.sendTieba("/c/c/post/add", "content=" + _.encodeURIComponent(content) + "&floor_num=" +
-                toFloor + "&kw=" + thread.kw.kw + "&tid=" + thread.tid + "&vcode=" + _.encodeURIComponent(vcode) + "&vcode_md5=" + vcodemd5 +
+                toFloor + "&kw=" + _.encodeURIComponent(thread.kw.kw) + "&tid=" + thread.tid + "&vcode=" + _.encodeURIComponent(vcode) + "&vcode_md5=" + vcodemd5 +
                 "&tbs=" + tbs + "&quote_id=" + tofloorpid + "&fid=" + thread.kw.fid, bduss));
             if (resjt["error_code"].Value<int>() != 0)
             {
@@ -313,22 +321,22 @@ namespace Opentieba
                         throw new NullReferenceException();
                     }
                 }
-                catch (NullReferenceException e)
+                catch (NullReferenceException)
                 {
                     throw new addPostField(resjt["error_code"].Value<int>(), resjt["error_msg"].Value<String>(),
                             "", "");
                 }
-                catch (ArgumentNullException e)
+                catch (ArgumentNullException)
                 {
                     throw new addPostField(resjt["error_code"].Value<int>(), resjt["error_msg"].Value<String>(),
                             "", "");
                 }
-                catch (InvalidOperationException e)
+                catch (InvalidOperationException)
                 {
                     throw new addPostField(resjt["error_code"].Value<int>(), resjt["error_msg"].Value<String>(),
                             "", "");
                 }
-                catch (ArgumentException e)
+                catch (ArgumentException)
                 {
                     throw new addPostField(resjt["error_code"].Value<int>(), resjt["error_msg"].Value<String>(),
                             "", "");
@@ -346,7 +354,7 @@ namespace Opentieba
             {
                 return jt["anti"]["tbs"].Value<String>();
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
                 throw new TiebaField(new EntryResult(), -1, "BDUSS不正确");
             }

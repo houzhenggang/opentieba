@@ -3,14 +3,31 @@ using System;
 
 namespace Opentieba
 {
+    /// <summary>
+    /// 表示一个用户
+    /// </summary>
     public class user
     {
+        /// <summary>
+        /// 用户ID
+        /// </summary>
         protected long userid;
+        /// <summary>
+        /// 用户名
+        /// </summary>
         protected String username;
+        /// <summary>
+        /// 获得UID
+        /// </summary>
+        /// <returns>UID</returns>
         public long getUid()
         {
             return this.userid;
         }
+        /// <summary>
+        /// 获得此对象表示的用户的用户名
+        /// </summary>
+        /// <returns>用户名</returns>
         public String getUsername()
         {
             return this.username;
@@ -39,15 +56,16 @@ namespace Opentieba
             {
                 this.userid = json["creator"]["id"].Value<long>();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 this.userid = 0;
             }
         }
         /// <summary>
-        /// 此函数仅用作BDUSS类的“BDUSS(String bduss)”构造器调用。
+        /// [内部调用]BDUSS类的“BDUSS(String bduss)”构造器调用。
         /// </summary>
         /// <param name="bduss">bduss</param>
+        /// <param name="tru">区分函数</param>
         protected user(String bduss,bool tru)
         {
             String jon = _stbapi.sendTieba("/c/f/frs/page", "kw=" + _.encodeURIComponent("机器猫") +
@@ -62,7 +80,7 @@ namespace Opentieba
                 userid = barinfo["user"]["id"].Value<long>();
                 username = barinfo["user"]["name"].Value<String>();
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
                 throw new LoginField(new LoginResult(false,"","",-1,"","",-1), -1, "BDUSS不正确");
             }

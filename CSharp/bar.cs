@@ -7,31 +7,68 @@ using Newtonsoft.Json.Linq;
 
 namespace Opentieba
 {
+    /// <summary>
+    /// 精品分类项
+    /// </summary>
     public class goodclassflyItem
     {
+        /// <summary>
+        /// 吧
+        /// </summary>
         public readonly String kw;
+        /// <summary>
+        /// 类型名称
+        /// </summary>
         public readonly String name;
+        /// <summary>
+        /// 类型序数
+        /// </summary>
         public readonly Int16 id;
+        /// <summary>
+        /// [内部程序调用]构造goodclassflyItem
+        /// </summary>
+        /// <param name="kw"></param>
+        /// <param name="name"></param>
+        /// <param name="id"></param>
         public goodclassflyItem(String kw, String name, Int16 id)
         {
             this.kw = kw;
             this.name = name;
             this.id = id;
         }
+        /// <summary>
+        /// 列出此精品分类下的帖子
+        /// </summary>
+        /// <returns>帖子组</returns>
         public List<basethread> listThread()
         {
             return null;
         }
     }
+    /// <summary>
+    /// 看吧失败后拖出
+    /// </summary>
     public class SeeBarField : TiebaField
     {
+        /// <summary>
+        /// 吧名称
+        /// </summary>
         public readonly String kw;
+        /// <summary>
+        /// [内部调用]
+        /// </summary>
+        /// <param name="kw"></param>
+        /// <param name="errcode"></param>
+        /// <param name="errmsg"></param>
         public SeeBarField(String kw, int errcode, String errmsg)
             : base(new EntryResult(), errcode, errmsg)
         {
             this.kw = kw;
         }
     }
+    /// <summary>
+    /// 一个列出的吧
+    /// </summary>
     public class baseBar
     {
         /// <summary>
@@ -42,6 +79,11 @@ namespace Opentieba
         /// 贴吧fid
         /// </summary>
         public readonly long fid;
+        /// <summary>
+        /// [内部调用]
+        /// </summary>
+        /// <param name="kw"></param>
+        /// <param name="fid"></param>
         public baseBar(String kw, long fid)
         {
             this.kw = kw;

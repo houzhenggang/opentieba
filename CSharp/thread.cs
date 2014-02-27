@@ -12,14 +12,49 @@ namespace Opentieba
     /// </summary>
     public class basethread
     {
+        /// <summary>
+        /// 帖子ID
+        /// </summary>
         public readonly long tid;
+        /// <summary>
+        /// 帖子标题
+        /// </summary>
         public readonly String title;
+        /// <summary>
+        /// 回复数
+        /// </summary>
         public readonly long reply_num;
+        /// <summary>
+        /// 最后一次回复时间
+        /// </summary>
         public readonly long last_time;
+        /// <summary>
+        /// 是否为置顶帖
+        /// </summary>
         public readonly bool is_top;
+        /// <summary>
+        /// 是否精品
+        /// </summary>
         public readonly bool is_good;
+        /// <summary>
+        /// 作者
+        /// </summary>
         public readonly user author;
+        /// <summary>
+        /// 吧名称
+        /// </summary>
         public readonly String kw;
+        /// <summary>
+        /// [内部调用]
+        /// </summary>
+        /// <param name="tid"></param>
+        /// <param name="title"></param>
+        /// <param name="reply_num"></param>
+        /// <param name="last_time"></param>
+        /// <param name="is_top"></param>
+        /// <param name="is_good"></param>
+        /// <param name="author"></param>
+        /// <param name="kw"></param>
         public basethread(long tid, String title, long reply_num, long last_time, bool is_top,
             bool is_good, user author, String kw)
         {
@@ -38,7 +73,16 @@ namespace Opentieba
     /// </summary>
     public class ThreadNotFindField : TiebaField
     {
+        /// <summary>
+        /// 请求的帖子id
+        /// </summary>
         public readonly long tid;
+        /// <summary>
+        /// [内部调用]
+        /// </summary>
+        /// <param name="tid"></param>
+        /// <param name="errcode"></param>
+        /// <param name="errmsg"></param>
         public ThreadNotFindField(long tid, int errcode, String errmsg)
             : base(new EntryResult(),
                 errcode, errmsg)
@@ -51,7 +95,13 @@ namespace Opentieba
     /// </summary>
     public class TieThread
     {
+        /// <summary>
+        /// tid
+        /// </summary>
         public readonly long tid;
+        /// <summary>
+        /// 标题
+        /// </summary>
         public readonly String title;
         public readonly long reply_num;
         public readonly user author;
