@@ -455,6 +455,22 @@ namespace Opentieba
                 throw new TiebaField(new EntryResult(), jors["error_code"].Value<int>(), jors["error_msg"].Value<String>());
             }
         }
+        public void like(bar kw)
+        {
+            JObject jors = JSON.parse(_stbapi.sendTieba("/c/c/forum/like", "kw=" + _.encodeURIComponent(kw.kw) + "&tbs=" + getTbs(),bduss));
+            if (jors["error_code"].Value<int>() != 0)
+            {
+                throw new TiebaField(new EntryResult(), jors["error_code"].Value<int>(), jors["error_msg"].Value<String>());
+            }
+        }
+        public void unlike(bar kw)
+        {
+            JObject jors = JSON.parse(_stbapi.sendTieba("/c/c/forum/unlike", "kw=" + _.encodeURIComponent(kw.kw) + "&tbs=" + getTbs(), bduss));
+            if (jors["error_code"].Value<int>() != 0)
+            {
+                throw new TiebaField(new EntryResult(), jors["error_code"].Value<int>(), jors["error_msg"].Value<String>());
+            }
+        }
     }
     public class ListBarResult : TiebaResult
     {
