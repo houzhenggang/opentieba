@@ -6,17 +6,44 @@
  *
  */
 (function () {
+    var crypto = require('crypto');
+    var http=require('http');
+    var sendHttp=function(host,fupa,mot,post,port,hdd){
+        http.request({
+            host:host,
+            port:port,
+            method:mot,
+            path:fupa
+        },function(res){
+            res.setEncoding('utf8');
+            var chunks="";
+            res.on('data', function (chunk) {
+                chunks+=chunk;
+            });
+            res.on('end', function(){
+                hdd({ztm:res.statusCode,body:chunks});
+            });
+        });
+    };
+    var md5 = function (str) {
+        var md5sum = crypto.createHash('md5');
+        md5sum.update(str);
+        str = md5sum.digest('hex');
+        return str;
+    };
     function ifnoerror(q) {
-        if (q.body.length == 0) {
+        if(q.ztm!=200){
             return false;
-        } else if (q.body.match(/^\{.+\}$/)==null) {
+        }
+        if (q.body.match(/^\{.+\}$/)==null) {
             return false;
         } else {
             return true;
         }
     }
 
-    /* MainObjOfTheApi*/
+    var _s={};
+
     _s.tiebaApi = {};
 
     _s.tiebaApi.getBduss = function () {
@@ -26,11 +53,11 @@
         return 0;
     };
     _s.tiebaApi.getUName = function () {
-        return _.getUsername();
+        return "";
     }
 
     _s.tiebaApi.sendTieba = function (fullpath, post, hdd) {
-        _.sendOutserveredHttp("c.tieba.baidu.com", fullpath, "POST", "BDUSS=" + encodeURIComponent(_s.tiebaApi.getBduss()) + "&_client_id=a0112ba8-b146-45c5-bb18-5b9fdde4917b&_client_type=4&_client_version=1.3.3&_phone_imei=" +
+        sendHttp("c.tieba.baidu.com", fullpath, "POST", "BDUSS=" + encodeURIComponent(_s.tiebaApi.getBduss()) + "&_client_id=a0112ba8-b146-45c5-bb18-5b9fdde4917b&_client_type=4&_client_version=1.3.3&_phone_imei=" +
             "05-00-54-20-06-00-01-00-04-00-9C-35-01-00-26-28-02-00-24-14-09-00-32-53&net_type=3" + (function () {
             if (post != "") {
                 return "&";
@@ -38,15 +65,11 @@
                 return "";
             }
         })() + post + "&sign=" + (function () {
-            /*return _.md5sun(String("BDUSS=" + encodeURIComponent(_s.tiebaApi.getBduss()) + "&_client_id=a0112ba8-b146-45c5-bb18-5b9fdde4917b&_client_type=4&_client_version=1.3.3&_phone_imei=" +
-             "05-00-54-20-06-00-01-00-04-00-9C-35-01-00-26-28-02-00-24-14-09-00-32-53&net_type=3" + post).toUpperCase().replace(/&/g, "") + "tiebaclient!!!");*/
             var allpost = String("BDUSS=" + encodeURIComponent(_s.tiebaApi.getBduss()) + "&_client_id=a0112ba8-b146-45c5-bb18-5b9fdde4917b&_client_type=4&_client_version=1.3.3&_phone_imei=" +
                 "05-00-54-20-06-00-01-00-04-00-9C-35-01-00-26-28-02-00-24-14-09-00-32-53&net_type=3&" + post);
             var joinednoandargs = decodeURIComponent(allpost).split("&").sort().join("");
-            return _.md5sun(joinednoandargs + "tiebaclient!!!");
-        })(), 80, function(q){
-            return {q.body: q};
-        });
+            return md5(joinednoandargs + "tiebaclient!!!");
+        })(), 80, hdd);
     }
     _s.tiebaApi.getLikeKWs = function (hdd) {
         if (_s.tiebaApi.getBduss() == "") {
@@ -201,7 +224,7 @@
             });
         });
     };
-    _s.tiebaApi.vcodefunction = function (vcodeimg, codemd5, onok, onconcal) {
+    /*_s.tiebaApi.vcodefunction = function (vcodeimg, codemd5, onok, onconcal) {
         var pint = $("<input style='width: 100%;' type='text'>");
         $(_.CreateMetroDlg(250)).css({padding: "15px"}).append($("<div style='font-size: 22px;'>需要验证码</div>")).append($("<div style='font-size: 18px;'>百度要求您为此次操作提供验证码</div>")).append($("<img src='" +
                 vcodeimg + "'>")).append(pint).append($("<button>重试</button>").click(function () {
@@ -213,7 +236,7 @@
                 onconcal();
                 _.CloseMetroDlg();
             }));
-    }
+    }*/
     _s.tiebaApi.addPost = function (con, pid, fn, tid, kw, kwid, hdd) {
         _s.tiebaApi.userInfo(0, function (u) {
             var tbs = u.anti.tbs;
@@ -271,7 +294,7 @@
             }
         });
     }
-    _s.tiebaApi.updataImage = function (base64enced, hdd) {
+    /*_s.tiebaApi.updataImage = function (base64enced, hdd) {
         _.sendThisServerHttp("/sys/php/postImgToaidu.php", "POST", "BDUSS=" + encodeURIComponent(_s.tiebaApi.getBduss()) + "&pic=" + encodeURIComponent(base64enced), function (text) {
             var q = JSON.parse(text);
             if (ifnoerror(q)) {
@@ -280,13 +303,13 @@
                 hdd(false);
             }
         })
-    }
+    }*/
     _s.tiebaApi.web = {};
     _s.tiebaApi.web.cookiebyBDUSS=function(bduss){
         return "BDUSS=" + encodeURIComponent(bduss) + "; BAIDUID=1674952A91B3F40D55193E1D527F9049:FG=1; TIEBAUID=edaa8f29dc77cd0780e78058; TIEBA_USERTYPE=e7d5aa4ea448ed84d7d493f2";
     }
     _s.tiebaApi.web.getmeizhi = function (uid, hdd) {
-        _.sendOutserveredHttp("tieba.baidu.com", "/encourage/get/meizhi/panel", "POST", "user_id=" + encodeURIComponent(uid) + "&type=1", 80, function (q) {
+        sendHttp("tieba.baidu.com", "/encourage/get/meizhi/panel", "POST", "user_id=" + encodeURIComponent(uid) + "&type=1", 80, function (q) {
             if (ifnoerror(q)) {
                 var json = JSON.parse(q.body);
                 if (json.no == 210007) {
@@ -342,7 +365,7 @@
         });
     };
     _s.tiebaApi.uidByName=function(name,hdd){
-        _.sendOutserveredHttp("tieba.baidu.com","/i/sys/user_json?un="+encodeURIComponent(name)+"&ie=utf-8","GET"
+        sendHttp("tieba.baidu.com","/i/sys/user_json?un="+encodeURIComponent(name)+"&ie=utf-8","GET"
             ,"",80,function(q){
                 if(ifnoerror(q)){
                     var json=JSON.parse(q.body);
@@ -361,9 +384,15 @@
             }
         });
     };
-    _s.tiebaApi.loginbduss = function (un, upass, hdd) {
+    var base64enc=function(a){
+        return new Buffer(a).toString('base64');
+    }
+    var base64dec=function(a){
+        return new Buffer(a, 'base64').toString();
+    }
+    _s.tiebaApi.login = function (un, upass, hdd) {
         function sdvc(codemd5, code) {
-            _s.tiebaApi.sendTieba("/c/s/login", "un=" + encodeURIComponent(un) + "&passwd=" + encodeURIComponent(_.base64enc(upass)) + "&vcode_md5=" + encodeURIComponent(codemd5) + "&vcode=" + encodeURIComponent(code), function (q) {
+            _s.tiebaApi.sendTieba("/c/s/login", "un=" + encodeURIComponent(un) + "&passwd=" + encodeURIComponent(base64enc(upass)) + "&vcode_md5=" + encodeURIComponent(codemd5) + "&vcode=" + encodeURIComponent(code), function (q) {
                 if (ifnoerror(q)) {
                     var login = JSON.parse(q.body);
                     if (login.anti && login.anti.need_vcode == 1) {
@@ -386,56 +415,6 @@
                 }
             });
         }
-
         sdvc("", "");
     };
-    _s.tiebaApi.dowithbduss = function (fun, bdu, uid, a, b, c, d, e, f, g, h, i, j, k, l) {
-        var yuanbduss = _s.tiebaApi.getBduss();
-        var yuanuid = _s.tiebaApi.getUid();
-        _s.tiebaApi.getBduss = function () {
-            return bdu;
-        }
-        _s.tiebaApi.getUid = function () {
-            return uid;
-        }
-        fun(a, b, c, d, e, f, g, h, i, j, k, l);
-        _s.tiebaApi.getBduss = function () {
-            return yuanbduss;
-        }
-        _s.tiebaApi.getUid = function () {
-            return yuanuid;
-        }
-    }
-    /*_s.tiebaApi.ifdiaoxian=function(bduss,hdd){
-     _s.dowithbduss(_s.tiebaApi.userInfo,bduss,0,function(q){
-     });
-     }*/
-    _.gsAppts("GET", "BAIDUTB", "UNAME", undefined, function (un) {
-        _s.tiebaApi.getUName = function () {
-            return un;
-        }
-        if (un == null || un.length < 1) {
-            return;
-        }
-        _.gsAppts("GET", "BAIDUTB", "UPASS", undefined, function (upass) {
-            function retry() {
-                _s.tiebaApi.loginbduss(un, upass, function (bduss, id, errcode, errmsg) {
-                    if (bduss && id) {
-                        _s.tiebaApi.getBduss = function () {
-                            return bduss;
-                        }
-                        _s.tiebaApi.getUid = function () {
-                            return id;
-                        }
-                    } else if (errcode) {
-                        _.showTrick("登录失败：" + errcode + " " + errmsg + " 点此重新登录。", function () {
-                            retry();
-                        });
-                    }
-                });
-            }
-
-            retry();
-        });
-    });
 })();
