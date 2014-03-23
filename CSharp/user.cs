@@ -42,6 +42,20 @@ namespace Opentieba
             this.userid = userid;
             this.username = username;
         }
+        public user(long userid)
+        {
+            this.userid = userid;
+            String j = _stbapi.sendTieba("/c/u/user/profile", "uid=" + userid, "");
+            JObject json = JSON.parse(j);
+            try
+            {
+                this.username = json["user"]["name"].Value<String>();
+            }
+            catch (Exception)
+            {
+                this.username = "";
+            }
+        }
         /// <summary>
         /// 构造一个user
         /// </summary>

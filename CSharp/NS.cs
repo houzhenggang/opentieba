@@ -147,6 +147,7 @@ namespace Opentieba
         /// </summary>
         public readonly String error_msg;
         public TiebaField(TiebaResult tr, int errcode, String errmsg)
+            : base("错误" + errcode + "：" + errmsg)
         {
             tbres = tr;
             error_code = errcode;

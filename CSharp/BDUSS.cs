@@ -290,8 +290,31 @@ namespace Opentieba
                     throw new addPostField(res["error_code"].Value<int>(), res["error_msg"].Value<String>(),
                             "", "");
                 }
+                catch (InvalidCastException)
+                {
+                    throw new addPostField(res["error_code"].Value<int>(), res["error_msg"].Value<String>(),
+                                                "", "");
+                }
             }
             return new addThreadResult(0, "", res["tid"].Value<long>(), kw, false, "", "");
+        }
+        public long checkSign(String kw)
+        {
+            String jon = _stbapi.sendTieba("/c/f/frs/page", "kw=" + _.encodeURIComponent(kw) +
+                "&is_good=0&pn=1", bduss);
+            JObject barinfo = JSON.parse(jon);
+            if (barinfo["error_code"].Value<int>() != 0)
+            {
+                throw new SeeBarField(kw, barinfo["error_code"].Value<int>(), barinfo["error_msg"].Value<String>());
+            }
+            if (barinfo["forum"]["sign_in_info"]["user_info"]["is_sign_in"].Value<bool>())
+            {
+                return barinfo["forum"]["sign_in_info"]["user_info"]["user_sign_rank"].Value<long>();
+            }
+            else
+            {
+                return 0;
+            }
         }
         public void addPost(String content, TieThread thread, long toFloor, TiePost FloorPost, String vcodemd5, String vcode)
         {

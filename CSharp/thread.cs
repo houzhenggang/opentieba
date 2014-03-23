@@ -106,6 +106,7 @@ namespace Opentieba
         public readonly long reply_num;
         public readonly user author;
         public readonly long maxPage;
+        public readonly JObject tinfo;
         public readonly bar kw;
         /// <summary>
         /// 构造器
@@ -127,6 +128,7 @@ namespace Opentieba
                 th["thread"]["author"]["level_id"].Value<int>(), th["thread"]["author"]["portrait"].Value<String>());
             maxPage = th["page"]["total_page"].Value<long>();
             kw = new bar(th["forum"]["name"].Value<String>());
+            tinfo = th;
         }
         public List<basePost> listpost(long page)
         {
@@ -305,6 +307,8 @@ namespace Opentieba
         public readonly long tid;
         public readonly long time;
         public readonly long maxPage;
+        public readonly long inFloor;
+        public readonly JToken pinfo;
         public TiePost(long pid, long tid)
         {
             JToken tiejt=JSON.parse(_stbapi.sendTieba("/c/f/pb/floor", "kz=" + tid + "&pid=" + pid + "&pn=1", ""));
@@ -314,9 +318,18 @@ namespace Opentieba
             }
             maxPage = tiejt["page"]["total_page"].Value<long>();
             this.tid = tiejt["thread"]["id"].Value<long>();
-            author = new userInBar(tiejt["post"]["author"]["id"].Value<long>(), tiejt["post"]["author"]["name"].Value<String>(),
+            try
+            {
+                author = new userInBar(tiejt["post"]["author"]["id"].Value<long>(), tiejt["post"]["author"]["name"].Value<String>(),
                 tiejt["post"]["author"]["is_like"].Value<bool>(), tiejt["post"]["author"]["level_id"].Value<int>(),
                 tiejt["post"]["author"]["portrait"].Value<String>());
+            }
+            catch (FormatException e)
+            {
+                author = new userInBar(0, tiejt["post"]["author"]["name"].Value<String>(),
+                false, 0,
+                tiejt["post"]["author"]["portrait"].Value<String>());
+            }
             JToken[] jt = tiejt["post"]["content"].Children().ToArray<JToken>();
             List<postContent> lpc = new List<postContent>();
             foreach (JToken jcont in jt)
@@ -326,6 +339,8 @@ namespace Opentieba
             content = lpc.ToArray();
             id = tiejt["post"]["id"].Value<long>();
             time = tiejt["post"]["time"].Value<long>();
+            pinfo = tiejt;
+            inFloor = tiejt["post"]["floor"].Value<long>();
         }
         public List<basePost> listSubPost(long pn)
         {

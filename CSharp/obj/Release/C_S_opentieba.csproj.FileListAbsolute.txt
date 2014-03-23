@@ -4,3 +4,8 @@ C:\Users\Sunbread\Git Project\opentieba\CSharp\bin\Release\Newtonsoft.Json.dll
 C:\Users\Sunbread\Git Project\opentieba\CSharp\obj\Release\C_S_opentieba.csprojResolveAssemblyReference.cache
 C:\Users\Sunbread\Git Project\opentieba\CSharp\obj\Release\C_S_opentieba.dll
 C:\Users\Sunbread\Git Project\opentieba\CSharp\obj\Release\C_S_opentieba.pdb
+F:\文件\C_S_opentieba\C_S_opentieba\CSharp\bin\Release\C_S_opentieba.dll
+F:\文件\C_S_opentieba\C_S_opentieba\CSharp\bin\Release\C_S_opentieba.pdb
+F:\文件\C_S_opentieba\C_S_opentieba\CSharp\obj\Release\C_S_opentieba.csprojResolveAssemblyReference.cache
+F:\文件\C_S_opentieba\C_S_opentieba\CSharp\obj\Release\C_S_opentieba.dll
+F:\文件\C_S_opentieba\C_S_opentieba\CSharp\obj\Release\C_S_opentieba.pdb

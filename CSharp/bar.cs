@@ -107,7 +107,9 @@ namespace Opentieba
         /// 此吧大吧主的user数组
         /// </summary>
         public readonly List<user> Managers = new List<user>();
-        protected readonly JObject barinfo;
+        public readonly JObject barinfo;
+        public readonly bool isSigned=false;
+        public readonly long signRank = 0;
         public readonly long maxPage;
         public readonly List<goodclassflyItem> gdclasses = new List<goodclassflyItem>();
         /// <summary>

@@ -74,7 +74,7 @@ namespace Opentieba
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new FormatException("ICID 格式不正确。参见文档“The ICID standard”");
             }
