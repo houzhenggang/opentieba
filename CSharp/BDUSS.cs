@@ -229,6 +229,7 @@ namespace Opentieba
         public BDUSS(String bduss)
             : base(bduss, true)
         {
+            this.bduss = bduss;
         }
         /// <summary>
         /// 使用给定BDUSS和用户名初始化一个BDUSS（通常来自ICID马甲）

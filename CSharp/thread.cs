@@ -340,7 +340,14 @@ namespace Opentieba
             id = tiejt["post"]["id"].Value<long>();
             time = tiejt["post"]["time"].Value<long>();
             pinfo = tiejt;
-            inFloor = tiejt["post"]["floor"].Value<long>();
+            try
+            {
+                inFloor = tiejt["post"]["floor"].Value<long>();
+            }
+            catch (Exception e)
+            {
+                inFloor = 0;
+            }
         }
         public List<basePost> listSubPost(long pn)
         {
