@@ -69,16 +69,8 @@ namespace Opentieba
     /// <summary>
     /// 一个列出的吧
     /// </summary>
-    public class baseBar
+    public class baseBar:kwf
     {
-        /// <summary>
-        /// 吧名称
-        /// </summary>
-        public readonly String kw;
-        /// <summary>
-        /// 贴吧fid
-        /// </summary>
-        public readonly long fid;
         /// <summary>
         /// [内部调用]
         /// </summary>
@@ -90,19 +82,32 @@ namespace Opentieba
             this.fid = fid;
         }
     }
-    /// <summary>
-    /// 表示一个吧。
-    /// </summary>
-    public class bar
+    public class kwf
     {
         /// <summary>
         /// 吧名称
         /// </summary>
-        public readonly String kw;
+        public String kw;
         /// <summary>
         /// 贴吧fid
         /// </summary>
-        public readonly long fid;
+        public long fid;
+        public kwf()
+        {
+            kw = "";
+            fid = 0;
+        }
+        public kwf(long fid, String kw)
+        {
+            this.fid = fid;
+            this.kw = kw;
+        }
+    }
+    /// <summary>
+    /// 表示一个吧。
+    /// </summary>
+    public class bar:kwf
+    {
         /// <summary>
         /// 此吧大吧主的user数组
         /// </summary>

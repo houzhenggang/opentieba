@@ -7,15 +7,39 @@ using System.Threading.Tasks;
 
 namespace Opentieba
 {
+    public class ttid
+    {
+        /// <summary>
+        /// tid
+        /// </summary>
+        public long tid;
+        public ttid()
+        {
+            tid = 0;
+        }
+        public ttid(long tid)
+        {
+            this.tid = tid;
+        }
+    }
+    public class tkwtid : ttid
+    {
+        public kwf kw;
+        public tkwtid()
+        {
+            kw = new kwf();
+        }
+        public tkwtid(long tid, kwf k)
+            : base(tid)
+        {
+            kw = k;
+        }
+    }
     /// <summary>
     /// 看吧页中的帖子，含有基本信息
     /// </summary>
-    public class basethread
+    public class basethread:ttid
     {
-        /// <summary>
-        /// 帖子ID
-        /// </summary>
-        public readonly long tid;
         /// <summary>
         /// 帖子标题
         /// </summary>
@@ -93,12 +117,8 @@ namespace Opentieba
     /// <summary>
     /// 帖子对象
     /// </summary>
-    public class TieThread
+    public class TieThread:tkwtid
     {
-        /// <summary>
-        /// tid
-        /// </summary>
-        public readonly long tid;
         /// <summary>
         /// 标题
         /// </summary>
@@ -107,7 +127,6 @@ namespace Opentieba
         public readonly user author;
         public readonly long maxPage;
         public readonly JObject tinfo;
-        public readonly bar kw;
         /// <summary>
         /// 构造器
         /// </summary>
@@ -127,12 +146,20 @@ namespace Opentieba
                 th["thread"]["author"]["name"].Value<String>(), th["thread"]["author"]["is_like"].Value<bool>(),
                 th["thread"]["author"]["level_id"].Value<int>(), th["thread"]["author"]["portrait"].Value<String>());
             maxPage = th["page"]["total_page"].Value<long>();
-            kw = new bar(th["forum"]["name"].Value<String>());
+            kw = new kwf(th["forum"]["id"].Value<long>(), th["forum"]["name"].Value<String>());
             tinfo = th;
         }
         public List<basePost> listpost(long page)
         {
-            JObject jo = JSON.parse(_stbapi.sendTieba("/c/f/pb/page", "kz=" + tid + "&pn=" + page, ""));
+            JObject jo;
+            if (page < 2)
+            {
+                jo = tinfo;
+            }
+            else
+            {
+                jo = JSON.parse(_stbapi.sendTieba("/c/f/pb/page", "kz=" + tid + "&pn=" + page, ""));
+            }
             JEnumerable<JToken> posts = jo["post_list"].Children();
             List<basePost> lbp = new List<basePost>();
             foreach (JToken pt in posts)
@@ -261,6 +288,14 @@ namespace Opentieba
             if (jy["c"] != null)
             {
                 c = jy["c"].Value<String>();
+            }
+            if (jy["src"] != null)
+            {
+                src = jy["src"].Value<String>();
+            }
+            if (jy["uid"] != null)
+            {
+                uid = jy["uid"].Value<long>();
             }
             if (jy["bsize"] != null)
             {

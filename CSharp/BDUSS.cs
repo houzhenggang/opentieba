@@ -100,8 +100,8 @@ namespace Opentieba
         /// <summary>
         /// 贴吧
         /// </summary>
-        public readonly bar kw;
-        public addThreadResult(int cd, String ms, long kz, bar kw, bool needVcd, String vcd, String vcmd5)
+        public readonly kwf kw;
+        public addThreadResult(int cd, String ms, long kz, kwf kw, bool needVcd, String vcd, String vcmd5)
         {
             error_code = cd;
             error_msg = ms;
@@ -249,7 +249,7 @@ namespace Opentieba
         /// <param name="vcode">验证码</param>
         /// <param name="vcodemd5">验证码标识</param>
         /// <returns></returns>
-        public addThreadResult addThread(bar kw, String content, String title, String vcode, String vcodemd5)
+        public addThreadResult addThread(kwf kw, String content, String title, String vcode, String vcodemd5)
         {
             String tbs = getTbs();
             JObject res = JSON.parse(_stbapi.sendTieba("/c/c/thread/add", "content=" + _.encodeURIComponent(content) + "&" +
@@ -317,7 +317,7 @@ namespace Opentieba
                 return 0;
             }
         }
-        public void addPost(String content, TieThread thread, long toFloor, TiePost FloorPost, String vcodemd5, String vcode)
+        public void addPost(String content, tkwtid thread, long toFloor, TiePost FloorPost, String vcodemd5, String vcode)
         {
             long tofloorpid = 0;
             if (FloorPost != null)
@@ -450,7 +450,7 @@ namespace Opentieba
                     throw new ArgumentException("type参数不正确，此值只能为reply或atme");
             }
         }
-        public void delPost(long pid, long tid, bar kw)
+        public void delPost(long pid, long tid, kwf kw)
         {
             String tbs = getTbs();
             JObject jors = JSON.parse(_stbapi.sendTieba("/c/c/bawu/delpost", "z=" + tid + "&word=" + _.encodeURIComponent(kw.kw) + "&pid=" + pid + "&tbs=" + tbs,
@@ -460,7 +460,7 @@ namespace Opentieba
                 throw new TiebaField(new EntryResult(), jors["error_code"].Value<int>(), jors["error_msg"].Value<String>());
             }
         }
-        public void delThread(long tid, bar kw)
+        public void delThread(long tid, kwf kw)
         {
             String tbs = getTbs();
             JObject jors = JSON.parse(_stbapi.sendTieba("/c/c/bawu/delthread", "z=" + tid + "&word=" + _.encodeURIComponent(kw.kw) + "&tbs=" + tbs,
@@ -470,7 +470,7 @@ namespace Opentieba
                 throw new TiebaField(new EntryResult(), jors["error_code"].Value<int>(), jors["error_msg"].Value<String>());
             }
         }
-        public void sign(bar kw)
+        public void sign(kwf kw)
         {
             String tbs = getTbs();
             JObject jors = JSON.parse(_stbapi.sendTieba("/c/c/forum/sign", "kw=" + _.encodeURIComponent(kw.kw) + "&tbs=" + tbs, bduss));
@@ -479,7 +479,7 @@ namespace Opentieba
                 throw new TiebaField(new EntryResult(), jors["error_code"].Value<int>(), jors["error_msg"].Value<String>());
             }
         }
-        public void like(bar kw)
+        public void like(kwf kw)
         {
             JObject jors = JSON.parse(_stbapi.sendTieba("/c/c/forum/like", "kw=" + _.encodeURIComponent(kw.kw) + "&tbs=" + getTbs(),bduss));
             if (jors["error_code"].Value<int>() != 0)
@@ -487,7 +487,7 @@ namespace Opentieba
                 throw new TiebaField(new EntryResult(), jors["error_code"].Value<int>(), jors["error_msg"].Value<String>());
             }
         }
-        public void unlike(bar kw)
+        public void unlike(kwf kw)
         {
             JObject jors = JSON.parse(_stbapi.sendTieba("/c/c/forum/unlike", "kw=" + _.encodeURIComponent(kw.kw) + "&tbs=" + getTbs(), bduss));
             if (jors["error_code"].Value<int>() != 0)
