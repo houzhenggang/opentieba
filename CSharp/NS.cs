@@ -25,7 +25,7 @@ namespace Opentieba
     /// <summary>
     /// opentieba核心类
     /// </summary>
-    public static class _
+    static class _
     {
         /// <summary>
         /// [内部调用]是否开启调试模式。
@@ -49,13 +49,9 @@ namespace Opentieba
             {
                 return wclient.UploadString(url, "POST", post);
             }
-            catch (WebException e)
+            catch (WebException)
             {
-                if (__debug__ == true)
-                {
-                    throw e;
-                }
-                return "-------WebERROR";
+                throw;
             }
         }
         /// <summary>

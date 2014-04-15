@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Net;
 namespace Opentieba
 {
     /// <summary>
@@ -222,6 +223,12 @@ namespace Opentieba
                 this.username = uname;
             }
         }
+
+        public String encgetCookie()
+        {
+            return "BDUSS=" + _.encodeURIComponent(this.bduss) + "; TIEBA_USERTYPE=737e8e03175d6b15cc177324; TIEBAUID=c5f54a97e163720d29161d75; BAIDUID=00F2392CACC8FD95E6E4E415D301804E:FG=1;";
+        }
+
         /// <summary>
         /// 使用给定BDUSS初始化一个BDUSS（通常来自ICID马甲）
         /// </summary>
@@ -373,10 +380,22 @@ namespace Opentieba
         /// <returns>tbs字符串</returns>
         public String getTbs()
         {
-            JObject jt = JSON.parse(_stbapi.sendTieba("/c/u/user/profile", "uid=" + userid, bduss));
+            WebClient wclient = new WebClient();
+            wclient.Headers.Add("Cookie", encgetCookie());
+            String json;
             try
             {
-                return jt["anti"]["tbs"].Value<String>();
+                json = wclient.DownloadString("http://tieba.baidu.com/dc/common/tbs");
+            }
+            catch (WebException e)
+            {
+                throw;
+            }
+            JObject jt = JSON.parse(json);
+            try
+            {
+                if (!jt["is_login"].Value<bool>()) { throw new NullReferenceException(); }
+                return jt["tbs"].Value<String>();
             }
             catch (NullReferenceException)
             {
