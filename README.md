@@ -1,4 +1,4 @@
-Opentieba alpha 1
+Opentieba bate 1
 =========
 
 <p>目前Opentieba支持多种语言：</p>
