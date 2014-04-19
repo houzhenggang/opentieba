@@ -380,22 +380,32 @@ namespace Opentieba
         /// <returns>tbs字符串</returns>
         public String getTbs()
         {
-            WebClient wclient = new WebClient();
-            wclient.Headers.Add("Cookie", encgetCookie());
-            String json;
+            //WebClient wclient = new WebClient();
+            //wclient.Headers.Add("Cookie", encgetCookie());
+            //String json;
+            //try
+            //{
+            //    json = wclient.DownloadString("http://tieba.baidu.com/dc/common/tbs");
+            //}
+            //catch (WebException e)
+            //{
+            //    throw;
+            //}
+            //JObject jt = JSON.parse(json);
+            //try
+            //{
+            //    if (!jt["is_login"].Value<bool>()) { throw new NullReferenceException(); }
+            //    return jt["tbs"].Value<String>();
+            //}
+            //catch (NullReferenceException)
+            //{
+            //    throw new TiebaField(new EntryResult(), -1, "BDUSS不正确");
+            //}
+            //! 这样子有问题
+            JObject jt = JSON.parse(_stbapi.sendTieba("/c/u/user/profile", "uid=" + userid, bduss));
             try
             {
-                json = wclient.DownloadString("http://tieba.baidu.com/dc/common/tbs");
-            }
-            catch (WebException e)
-            {
-                throw;
-            }
-            JObject jt = JSON.parse(json);
-            try
-            {
-                if (!jt["is_login"].Value<bool>()) { throw new NullReferenceException(); }
-                return jt["tbs"].Value<String>();
+                return jt["anti"]["tbs"].Value<String>();
             }
             catch (NullReferenceException)
             {
