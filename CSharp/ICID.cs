@@ -18,7 +18,7 @@ namespace Opentieba
         public ICID(FileStream fs)
         {
             StreamReader sr = new StreamReader(fs);
-            String p=sr.ReadToEnd();
+            String p = sr.ReadToEnd();
             explainICID(p);
         }
         /// <summary>
@@ -62,7 +62,7 @@ namespace Opentieba
                     if (line.StartsWith("("))
                     {
                         int usernameEnd = line.IndexOf(',', 1) - 1;
-                        String username=line.Substring(1, usernameEnd);
+                        String username = line.Substring(1, usernameEnd);
                         int bdussStart = line.IndexOf("[BDUSS=", usernameEnd + 1) + 7;
                         String bduss = linep.Substring(bdussStart);
                         bduss = bduss.Substring(0, bduss.Length - 1);

@@ -514,6 +514,14 @@ namespace Opentieba
                 throw new TiebaField(new EntryResult(), jors["error_code"].Value<int>(), jors["error_msg"].Value<String>());
             }
         }
+        public void zam(String za, TiePost tp)
+        {
+            JObject jors = JSON.parse(_stbapi.sendTieba("/c/c/zan/like", "action=" + _.encodeURIComponent(za) + "&post_id=" + tp.id + "&thread_id=" + tp.tid, this.bduss));
+            if (jors["error_code"].Value<int>() != 0)
+            {
+                throw new TiebaField(new EntryResult(), jors["error_code"].Value<int>(), jors["error_msg"].Value<String>());
+            }
+        }
     }
     public class ListBarResult : TiebaResult
     {

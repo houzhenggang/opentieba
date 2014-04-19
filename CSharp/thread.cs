@@ -38,7 +38,7 @@ namespace Opentieba
     /// <summary>
     /// 看吧页中的帖子，含有基本信息
     /// </summary>
-    public class basethread:ttid
+    public class basethread : ttid
     {
         /// <summary>
         /// 帖子标题
@@ -68,6 +68,10 @@ namespace Opentieba
         /// 吧名称
         /// </summary>
         public readonly String kw;
+        public readonly long zan;
+        public readonly List<userWithPic> zanusr;
+        public readonly bool isBduLiked;
+        public readonly long fristPid;
         /// <summary>
         /// [内部调用]
         /// </summary>
@@ -80,7 +84,7 @@ namespace Opentieba
         /// <param name="author"></param>
         /// <param name="kw"></param>
         public basethread(long tid, String title, long reply_num, long last_time, bool is_top,
-            bool is_good, user author, String kw)
+            bool is_good, user author, String kw, long zan, List<userWithPic> zanusr, bool isBduL, long fpid)
         {
             this.tid = tid;
             this.title = title;
@@ -90,6 +94,10 @@ namespace Opentieba
             this.is_good = is_good;
             this.author = author;
             this.kw = kw;
+            this.zan = zan;
+            this.zanusr = zanusr;
+            this.isBduLiked = isBduL;
+            this.fristPid = fpid;
         }
     }
     /// <summary>
@@ -117,7 +125,7 @@ namespace Opentieba
     /// <summary>
     /// 帖子对象
     /// </summary>
-    public class TieThread:tkwtid
+    public class TieThread : tkwtid
     {
         /// <summary>
         /// 标题
@@ -143,16 +151,16 @@ namespace Opentieba
             title = th["thread"]["title"].Value<String>();
             reply_num = th["thread"]["reply_num"].Value<long>();
             author = new userInBar(th["thread"]["author"]["id"].Value<long>(),
-                th["thread"]["author"]["name"].Value<String>(), th["thread"]["author"]["is_like"].Value<bool>(),
+                th["thread"]["author"]["name"].Value<String>(), th["thread"]["author"]["is_like"].Value<int>() == 1,
                 th["thread"]["author"]["level_id"].Value<int>(), th["thread"]["author"]["portrait"].Value<String>());
             maxPage = th["page"]["total_page"].Value<long>();
             kw = new kwf(th["forum"]["id"].Value<long>(), th["forum"]["name"].Value<String>());
             tinfo = th;
         }
-        public List<basePost> listpost(long page)
+        public List<basePost> listpost(long page, bool reflash = true)
         {
             JObject jo;
-            if (page < 2)
+            if (page < 2 && (!reflash))
             {
                 jo = tinfo;
             }
@@ -171,7 +179,7 @@ namespace Opentieba
                     pc.Add(postContent.byJtoken(conjt));
                 }
                 lbp.Add(new basePost(new userInBar(pt["author"]["id"].Value<long>(), pt["author"]["name"].Value<String>(),
-                    pt["author"]["is_like"].Value<bool>(), pt["author"]["level_id"].Value<int>(), pt["author"]["portrait"].Value<String>())
+                    pt["author"]["is_like"].Value<int>() == 1, pt["author"]["level_id"].Value<int>(), pt["author"]["portrait"].Value<String>())
                     , pc.ToArray(), pt["floor"].Value<long>(), pt["id"].Value<long>(), pt["sub_post_number"].Value<long>(),
                     pt["time"].Value<long>(), pt["title"].Value<String>()));
             }
@@ -346,7 +354,7 @@ namespace Opentieba
         public readonly JToken pinfo;
         public TiePost(long pid, long tid)
         {
-            JToken tiejt=JSON.parse(_stbapi.sendTieba("/c/f/pb/floor", "kz=" + tid + "&pid=" + pid + "&pn=1", ""));
+            JToken tiejt = JSON.parse(_stbapi.sendTieba("/c/f/pb/floor", "kz=" + tid + "&pid=" + pid + "&pn=1", ""));
             if (tiejt["error_code"].Value<int>() != 0)
             {
                 throw new PostNotFindField(tiejt["error_code"].Value<int>(), tiejt["error_msg"].Value<String>());
@@ -356,7 +364,7 @@ namespace Opentieba
             try
             {
                 author = new userInBar(tiejt["post"]["author"]["id"].Value<long>(), tiejt["post"]["author"]["name"].Value<String>(),
-                tiejt["post"]["author"]["is_like"].Value<bool>(), tiejt["post"]["author"]["level_id"].Value<int>(),
+                tiejt["post"]["author"]["is_like"].Value<int>() == 1, tiejt["post"]["author"]["level_id"].Value<int>(),
                 tiejt["post"]["author"]["portrait"].Value<String>());
             }
             catch (FormatException e)
@@ -384,9 +392,17 @@ namespace Opentieba
                 inFloor = 0;
             }
         }
-        public List<basePost> listSubPost(long pn)
+        public List<basePost> listSubPost(long pn, bool reflush = true)
         {
-            JToken tiejt = JSON.parse(_stbapi.sendTieba("/c/f/pb/floor", "kz=" + tid + "&pid=" + id + "&pn="+pn, ""));
+            JToken tiejt;
+            if (pn > 1 || reflush)
+            {
+                tiejt = JSON.parse(_stbapi.sendTieba("/c/f/pb/floor", "kz=" + tid + "&pid=" + id + "&pn=" + pn, ""));
+            }
+            else
+            {
+                tiejt = pinfo;
+            }
             JEnumerable<JToken> suli = tiejt["subpost_list"].Children();
             List<basePost> lbc = new List<basePost>();
             foreach (JToken pjt in suli)
@@ -397,7 +413,7 @@ namespace Opentieba
                 {
                     lpc.Add(postContent.byJtoken(conjte));
                 }
-                postContent[] pce=lpc.ToArray();
+                postContent[] pce = lpc.ToArray();
                 lbc.Add(new basePost(new userInBar(pjt["author"]["id"].Value<long>(), pjt["author"]["name"].Value<String>(),
                     false, 0, pjt["author"]["portrait"].Value<String>()), pce, 0, pjt["id"].Value<long>(), 0, pjt["time"].Value<long>(),
                     ""));

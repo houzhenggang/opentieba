@@ -80,7 +80,7 @@ namespace Opentieba
         /// </summary>
         /// <param name="bduss">bduss</param>
         /// <param name="tru">区分函数</param>
-        protected user(String bduss,bool tru)
+        protected user(String bduss, bool tru)
         {
             String jon = _stbapi.sendTieba("/c/f/frs/page", "kw=" + _.encodeURIComponent("机器猫") +
                 "&is_good=0&pn=1", bduss);
@@ -96,7 +96,7 @@ namespace Opentieba
             }
             catch (NullReferenceException)
             {
-                throw new LoginField(new LoginResult(false,"","",-1,"","",-1), -1, "BDUSS不正确");
+                throw new LoginField(new LoginResult(false, "", "", -1, "", "", -1), -1, "BDUSS不正确");
             }
         }
     }
