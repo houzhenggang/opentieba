@@ -267,7 +267,7 @@ namespace Opentieba
             {
                 try
                 {
-                    if (res["info"]["need_vcode"].Value<bool>())
+                    if (res["info"]["need_vcode"].Value<int>()>0)
                     {
                         throw new AddThreadField(new addThreadResult(res["error_code"].Value<int>(), res["error_msg"].Value<String>(),
                             0, kw, true, res["info"]["vcode_pic_url"].Value<String>(), res["info"]["vcode_md5"].Value<String>())
@@ -315,7 +315,7 @@ namespace Opentieba
             {
                 throw new SeeBarField(kw, barinfo["error_code"].Value<int>(), barinfo["error_msg"].Value<String>());
             }
-            if (barinfo["forum"]["sign_in_info"]["user_info"]["is_sign_in"].Value<bool>())
+            if (barinfo["forum"]["sign_in_info"]["user_info"]["is_sign_in"].Value<int>()>0)
             {
                 return barinfo["forum"]["sign_in_info"]["user_info"]["user_sign_rank"].Value<long>();
             }
@@ -339,7 +339,7 @@ namespace Opentieba
             {
                 try
                 {
-                    if (resjt["info"]["need_vcode"].Value<bool>())
+                    if (resjt["info"]["need_vcode"].Value<int>()>0)
                     {
                         /*throw new AddThreadField(new addThreadResult(res["error_code"].Value<int>(), res["error_msg"].Value<String>(),
                             0, kw, true, res["info"]["vcode_pic_url"].Value<String>(), res["info"]["vcode_md5"].Value<String>())
@@ -394,7 +394,7 @@ namespace Opentieba
             //JObject jt = JSON.parse(json);
             //try
             //{
-            //    if (!jt["is_login"].Value<bool>()) { throw new NullReferenceException(); }
+            //    if (!jt["is_login"].Value<int>()>0) { throw new NullReferenceException(); }
             //    return jt["tbs"].Value<String>();
             //}
             //catch (NullReferenceException)
@@ -452,7 +452,7 @@ namespace Opentieba
                         JEnumerable<JToken> jejt = rjo["reply_list"].Children();
                         foreach (JToken t in jejt)
                         {
-                            tp.Add(new msgPost(t["content"].Value<String>(), t["fname"].Value<String>(), t["is_floor"].Value<bool>(),
+                            tp.Add(new msgPost(t["content"].Value<String>(), t["fname"].Value<String>(), t["is_floor"].Value<int>()>0,
                                 t["post_id"].Value<long>(), t["time"].Value<long>(), t["title"].Value<String>(), t["thread_id"].Value<long>(),
                                 new userWithPic(t["replyer"]["id"].Value<long>(), t["replyer"]["name"].Value<String>(), t["replyer"]["portrait"].Value<String>())));
                         }
@@ -469,7 +469,7 @@ namespace Opentieba
                         JEnumerable<JToken> jejt = rjo["at_list"].Children();
                         foreach (JToken t in jejt)
                         {
-                            tp.Add(new msgPost(t["content"].Value<String>(),t["fname"].Value<String>(),t["is_floor"].Value<bool>(),
+                            tp.Add(new msgPost(t["content"].Value<String>(),t["fname"].Value<String>(),t["is_floor"].Value<int>()>0,
                                 t["post_id"].Value<long>(),t["time"].Value<long>(),t["title"].Value<String>(),t["thread_id"].Value<long>(),
                                 new userWithPic(t["replyer"]["id"].Value<long>(),t["replyer"]["name"].Value<String>(),t["replyer"]["portrait"].Value<String>())));
                         }
