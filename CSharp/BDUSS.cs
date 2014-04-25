@@ -423,7 +423,7 @@ namespace Opentieba
             List<baseBar> lb = new List<baseBar>();
             foreach (JToken tok in jet)
             {
-                lb.Add(new baseBar(tok["name"].Value<String>(),tok["forum_id"].Value<long>()));
+                lb.Add(new baseBar(tok["name"].Value<String>(), tok["forum_id"].Value<long>(), tok["level_id"].Value<int>()));
             }
             return new ListBarResult(lb.ToArray(), bjx["page"]["total_page"].Value<int>());
         }

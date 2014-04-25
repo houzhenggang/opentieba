@@ -71,15 +71,17 @@ namespace Opentieba
     /// </summary>
     public class baseBar : kwf
     {
+        public readonly int lid;
         /// <summary>
         /// [内部调用]
         /// </summary>
         /// <param name="kw"></param>
         /// <param name="fid"></param>
-        public baseBar(String kw, long fid)
+        public baseBar(String kw, long fid, int lid)
         {
             this.kw = kw;
             this.fid = fid;
+            this.lid = lid;
         }
     }
     public class kwf
