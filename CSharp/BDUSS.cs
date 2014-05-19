@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Text;
 namespace Opentieba
 {
     /// <summary>
@@ -531,6 +532,64 @@ namespace Opentieba
             {
                 throw new TiebaField(new EntryResult(), jors["error_code"].Value<int>(), jors["error_msg"].Value<String>());
             }
+        }
+        /// <summary>
+        /// "#(pic," + picid + "," + img.width + "," + img.height + ")");
+        /// </summary>
+        /// <param name="image">图片byte</param>
+        /// <returns>picid</returns>
+        public String updataImage(byte[] image)
+        {
+            WebClient c = new WebClient();
+            String bound = "--------opentieba" + new Random().Next(Int32.MaxValue) + new Random().Next(Int32.MaxValue) + new Random().Next(Int32.MaxValue);
+            c.Headers.Add("Content-Type", "multipart/form-data; boundary="+bound);
+            List<byte> data = new List<byte>();
+            String cstart = @"--" + bound + @"
+Content-Disposition: form-data; name=""BDUSS""
+
+" + bduss + @"
+--" + bound + @"
+Content-Disposition: form-data; name=""_client_type""
+
+1
+--" + bound + @"
+Content-Disposition: form-data; name=""_phone_imei""
+
+05-00-54-20-06-00-01-00-04-00-9C-35-01-00-26-28-02-00-24-14-09-00-32-53
+--" + bound + @"
+Content-Disposition: form-data; name=""_client_version""
+
+wp1.0beta
+--" + bound + @"
+Content-Disposition: form-data; name=""_net_type""
+
+3
+--" + bound + @"
+Content-Disposition: form-data; name=""pic"";filename=""file""
+
+";
+            byte[] cstardata = Encoding.UTF8.GetBytes(cstart);
+            data.AddRange(cstardata);
+            data.AddRange(image);
+            String cend = @"
+--" + bound;
+            byte[] cenddata = Encoding.UTF8.GetBytes(cend);
+            data.AddRange(cenddata);
+            byte[] upd = data.ToArray();
+            byte[] fhbyte = c.UploadData("http://c.tieba.baidu.com/c/c/img/upload", upd);
+            JObject json = JSON.parse(Encoding.ASCII.GetString(fhbyte));
+            if (json["error_code"].Value<int>() != 0)
+            {
+                throw new TiebaField(new EntryResult(), json["error_code"].Value<int>(), json["error_msg"].Value<String>());
+            }
+            return json["info"]["pic_id"].Value<String>();
+        }
+        public String updataImage(System.IO.FileStream f)
+        {
+            byte[] b = new byte[f.Length];
+            f.Read(b, 0, (int)f.Length);
+            f.Close();
+            return updataImage(b);
         }
     }
     public class ListBarResult : TiebaResult
