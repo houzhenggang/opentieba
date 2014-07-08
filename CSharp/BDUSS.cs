@@ -584,11 +584,15 @@ Content-Disposition: form-data; name=""pic"";filename=""file""
             }
             return json["info"]["pic_id"].Value<String>();
         }
+        /// <summary>
+        /// 不会关闭文件
+        /// </summary>
+        /// <param name="f"></param>
+        /// <returns></returns>
         public String updataImage(System.IO.FileStream f)
         {
             byte[] b = new byte[f.Length];
             f.Read(b, 0, (int)f.Length);
-            f.Close();
             return updataImage(b);
         }
     }
