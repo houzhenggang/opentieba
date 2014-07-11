@@ -392,7 +392,7 @@ namespace Opentieba
                 inFloor = 0;
             }
         }
-        public List<basePost> listSubPost(long pn, bool reflush = true)
+        public MaxPageAndListResult<basePost> listSubPost(long pn, bool reflush = true)
         {
             JToken tiejt;
             if (pn > 1 || reflush)
@@ -418,7 +418,7 @@ namespace Opentieba
                     false, 0, pjt["author"]["portrait"].Value<String>()), pce, 0, pjt["id"].Value<long>(), 0, pjt["time"].Value<long>(),
                     ""));
             }
-            return lbc;
+            return new MaxPageAndListResult<basePost>(lbc, tiejt["page"]["total_page"].Value<long>());
         }
     }
 }

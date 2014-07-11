@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Web;
+using System.Net;
+using System.IO;
 
 namespace Opentieba
 {
@@ -40,19 +42,17 @@ namespace Opentieba
         /// <returns></returns>
         public static String sendHttp(String url, String post, String cookie)
         {
-            WebClient wclient = new WebClient();
-            wclient.Headers.Add("Content-Type", "application/x-www-form-urlencoded");
-            if (cookie.Length > 0) {
-                wclient.Headers.Add("Cookie", cookie);
-            }
-            try
-            {
-                return wclient.UploadString(url, "POST", post);
-            }
-            catch (WebException)
-            {
-                throw;
-            }
+            byte[] byteArray = Encoding.UTF8.GetBytes(post);
+            WebRequest hwr = HttpWebRequest.Create(url);
+            hwr.ContentType = "application/x-www-form-urlencoded";
+            hwr.ContentLength = byteArray.Length;
+            hwr.Method = "POST";
+            Stream sr = hwr.GetRequestStream();
+            sr.Write(byteArray, 0, byteArray.Length);
+            WebResponse wr = hwr.GetResponse();
+            Stream cc = wr.GetResponseStream();
+            StreamReader srr = new StreamReader(cc);
+            return srr.ReadToEnd();
         }
         /// <summary>
         /// [内部调用]编码URL

@@ -589,7 +589,7 @@ Content-Disposition: form-data; name=""pic"";filename=""file""
         /// </summary>
         /// <param name="f"></param>
         /// <returns></returns>
-        public String updataImage(System.IO.FileStream f)
+        public String updataImage(System.IO.Stream f)
         {
             byte[] b = new byte[f.Length];
             f.Read(b, 0, (int)f.Length);
