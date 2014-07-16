@@ -22,6 +22,21 @@ namespace Opentieba
             this.tid = tid;
         }
     }
+    public class tpid
+    {
+        public long id;
+        public long tid;
+        public tpid()
+        {
+            id = 0;
+            tid = 0;
+        }
+        public tpid(long pid, long tid)
+        {
+            this.tid = tid;
+            this.id = pid;
+        }
+    }
     public class tkwtid : ttid
     {
         public kwf kw;
@@ -342,17 +357,16 @@ namespace Opentieba
     {
         public PostNotFindField(int ec, String em) : base(new EntryResult(), ec, em) { }
     }
-    public class TiePost
+    public class TiePost : tpid
     {
         public readonly userInBar author;
         public readonly postContent[] content;
-        public readonly long id;
-        public readonly long tid;
         public readonly long time;
         public readonly long maxPage;
         public readonly long inFloor;
         public readonly JToken pinfo;
         public TiePost(long pid, long tid)
+            : base(pid, tid)
         {
             JToken tiejt = JSON.parse(_stbapi.sendTieba("/c/f/pb/floor", "kz=" + tid + "&pid=" + pid + "&pn=1", ""));
             if (tiejt["error_code"].Value<int>() != 0)

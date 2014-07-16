@@ -147,7 +147,7 @@ namespace Opentieba
             }
             fid = barinfo["forum"]["id"].Value<long>();
         }
-        bar(BDUSS b, String kw)
+        public bar(BDUSS b, String kw)
         {
             this.kw = kw;
             String jon = _stbapi.sendTieba("/c/f/frs/page", "kw=" + _.encodeURIComponent(kw) +
@@ -178,7 +178,7 @@ namespace Opentieba
         /// </summary>
         /// <param name="page">页数</param>
         /// <returns>一个basethread组成的List组</returns>
-        public List<basethread> listThreads(long page)
+        public MaxPageAndListResult<basethread> listThreads(long page)
         {
             String bduss = "";
             if (sb != null)
@@ -187,7 +187,8 @@ namespace Opentieba
             }
             String jon = _stbapi.sendTieba("/c/f/frs/page", "kw=" + _.encodeURIComponent(kw) +
                 "&is_good=0&pn=" + page, bduss);
-            JEnumerable<JToken> threadlist = JSON.parse(jon)["thread_list"].Children();
+            JObject jot = JSON.parse(jon);
+            JEnumerable<JToken> threadlist = jot["thread_list"].Children();
             List<basethread> lt = new List<basethread>();
             foreach (JToken jt in threadlist)
             {
@@ -199,7 +200,7 @@ namespace Opentieba
                 bool isb = false;
                 if (jt["zan"]["is_liked"] != null)
                 {
-                    isb = jt["zan"]["is_liked"].Value<int>() == 1;
+                    isb = jt["zan"]["is_liked"].Value<int>() > 0;
                 }
                 lt.Add(new basethread(jt["tid"].Value<long>(), jt["title"].Value<String>(),
                     jt["reply_num"].Value<long>(), jt["last_time_int"].Value<long>(), (jt["is_top"] == null ? false : jt["is_top"].Value<int>() == 1),
@@ -207,7 +208,7 @@ namespace Opentieba
                         jt["author"]["name"].Value<String>(), jt["author"]["portrait"].Value<String>()), kw, jt["zan"]["num"].Value<long>(),
                         likerList, isb, jt["first_post_id"].Value<long>()));
             }
-            return lt;
+            return new MaxPageAndListResult<basethread>(lt, jot["page"]["total_page"].Value<long>());
         }
     }
 }
