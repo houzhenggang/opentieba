@@ -149,7 +149,8 @@ namespace Opentieba
         public readonly long reply_num;
         public readonly user author;
         public readonly long maxPage;
-        public readonly JObject tinfo;
+        public readonly JToken tinfo;
+        public readonly long time;
         /// <summary>
         /// 构造器
         /// </summary>
@@ -169,12 +170,13 @@ namespace Opentieba
                 th["thread"]["author"]["name"].Value<String>(), th["thread"]["author"]["is_like"].Value<int>() == 1,
                 th["thread"]["author"]["level_id"].Value<int>(), th["thread"]["author"]["portrait"].Value<String>());
             maxPage = th["page"]["total_page"].Value<long>();
+            time = th["thread"]["create_time"].Value<long>();
             kw = new kwf(th["forum"]["id"].Value<long>(), th["forum"]["name"].Value<String>());
-            tinfo = th;
+            tinfo = (JToken)th;
         }
         public List<basePost> listpost(long page, bool reflash = true)
         {
-            JObject jo;
+            JToken jo;
             if (page < 2 && (!reflash))
             {
                 jo = tinfo;
