@@ -45,6 +45,7 @@ namespace Opentieba
             byte[] byteArray = Encoding.UTF8.GetBytes(post);
             WebRequest hwr = HttpWebRequest.Create(url);
             hwr.ContentType = "application/x-www-form-urlencoded";
+            hwr.Headers.Add("User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64) Opentieba/1.4 (KHTML, like Gecko) .NET/4.5");
             hwr.ContentLength = byteArray.Length;
             hwr.Method = "POST";
             Stream sr = hwr.GetRequestStream();

@@ -282,7 +282,8 @@ namespace Opentieba
         public readonly int[] bsize = { 0, 0 };
         public readonly String src = "";
         public readonly long uid = 0;
-        public postContent(int type, String text, String link, String c, int[] bsize, String src, long uid)
+        public readonly String big_cdn_src = "";
+        public postContent(int type, String text, String link, String c, int[] bsize, String src, long uid, String bs)
         {
             this.type = type;
             this.text = text;
@@ -291,18 +292,20 @@ namespace Opentieba
             this.bsize = bsize;
             this.src = src;
             this.uid = uid;
+            this.big_cdn_src = bs;
         }
         public static postContent byJtoken(JToken jy)
         {
             int type;
-            String text = "[?]";
+            String text = "[ " + (jy["cdn_src"] != null ? jy["cdn_src"].Value<String>() : "") + " ]";
             String link = "";
             String c = "";
             int[] bsize = { 0, 0 };
             String src = "";
+            String bcdsrc = "";
             long uid = 0;
             type = jy["type"].Value<int>();
-            if (jy["text"] != null)
+            if (jy["text"] != null && jy["src"] == null)
             {
                 text = jy["text"].Value<String>();
             }
@@ -312,11 +315,18 @@ namespace Opentieba
             }
             if (jy["c"] != null)
             {
-                c = jy["c"].Value<String>();
+                c = jy["text"].Value<String>();
+                text = "[ " + jy["c"].Value<String>()+" ]";
             }
             if (jy["src"] != null)
             {
-                src = jy["src"].Value<String>();
+                src = jy["cdn_src"].Value<String>();
+                text = "[ "+src+" ]";
+                if (jy["big_cdn_src"] != null)
+                {
+                    bcdsrc = jy["big_cdn_src"].Value<String>();
+                    text = "[ " + bcdsrc + " ]";
+                }
             }
             if (jy["uid"] != null)
             {
@@ -332,7 +342,7 @@ namespace Opentieba
                 }
                 bsize = ps.ToArray();
             }
-            return new postContent(type, text, link, c, bsize, src, uid);
+            return new postContent(type, text, link, c, bsize, src, uid, bcdsrc);
         }
     }
     public class basePost
