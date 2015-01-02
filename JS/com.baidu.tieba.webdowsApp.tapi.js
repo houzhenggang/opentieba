@@ -1,6 +1,6 @@
 /*
  *
- *   Lib for WebdowsApp: BaiduTieba (com.baidu.tieba._sApp)
+ *   Lib for Node.js: BaiduTieba (com.baidu.tieba._sApp)
  *   Describe: 用于贴吧的API接口
  *   Date: 2013-12-11
  *
