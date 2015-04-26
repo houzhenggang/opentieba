@@ -5,7 +5,7 @@ namespace Opentieba
     
     // 在master中将放置有足够知名度的代码（上方）。
     // 在下方放置插件的include，例如：
-    // include("/OpenTieba_Module/Opentieba.Sunbread.Users++.php"); 
+    // include("/OpenTieba_Module/Sunbread.Users++.php"); 
 	
 	
 	
