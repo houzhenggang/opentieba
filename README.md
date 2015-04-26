@@ -4,6 +4,7 @@ Opentieba 1.5.3 libary version
 <p>目前Opentieba支持多种语言：</p>
   Opentieba For C# : CSharp 文件夹。<br />
   Opentieba For Node.JS : JS 文件夹。<br />
+  Opentieba For PHP : PHP 文件夹，Dev 版。<br />
 <br />
 <p>Opentieba For Node.JS 配置方法：</p>
   修改 sendTieba 为发包函数。<br />
