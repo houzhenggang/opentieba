@@ -1,10 +1,11 @@
 <?php
 namespace Opentieba
 {
-    require("/OpenTieba_Module/Opentieba.Core.php"); // ´ËÐÐÇëÎðÉ¾³ý
-    // ÔÚÏÂ·½·ÅÖÃ²å¼þµÄinclude£¬ÀýÈç£º
+    require("/OpenTieba_Module/Opentieba.Core.php"); // æ­¤è¡Œè¯·å‹¿åˆ é™¤
+    
+    // åœ¨masterä¸­å°†æ”¾ç½®æœ‰è¶³å¤ŸçŸ¥ååº¦çš„ä»£ç ï¼ˆä¸Šæ–¹ï¼‰ã€‚
+    // åœ¨ä¸‹æ–¹æ”¾ç½®æ’ä»¶çš„includeï¼Œä¾‹å¦‚ï¼š
     // include("/OpenTieba_Module/Opentieba.Sunbread.Users++.php"); 
-	// ÔÚmasterÖÐ½«·ÅÖÃÓÐ×ã¹»ÖªÃû¶ÈµÄ´úÂë¡£
 	
 	
 	
