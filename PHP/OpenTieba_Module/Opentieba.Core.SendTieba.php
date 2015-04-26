@@ -1,5 +1,5 @@
 <?php
-static class SendTieba // 隶属于Core类
+class SendTieba // 隶属于Core类
 {
     public function StdPost($path, $post = '', $bduss = '') // HttpPost的贴吧安全封装版
     {
