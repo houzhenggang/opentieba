@@ -11,7 +11,7 @@ class Core // 核心，有关网络通信及BDUSS操作
         回调将含有ErrorCode，ErrorMessage，NeedVerifyCode，VerifyCodeMD5，VerifyCodePictureURL。
         （VerifyCodeMD5与VerifyCodePictureURL取决于NeedVerifyCode）
         */
-        $posting = 'un' . urlencode($username) . '&passwd' + urlencode(base64_encode($password)) . '&vcode_md5=' . $vcodemd5 . '&vcode' . urlencode($vcode)
+        $posting = 'un=' . urlencode($username) . '&passwd' + urlencode(base64_encode($password)) . '&vcode_md5=' . $vcodemd5 . '&vcode' . urlencode($vcode)
         $output = $this->StdPost('/c/s/login', $posting);
         $output = json_decode($output)
         if ($output == false) return false;
