@@ -1,12 +1,15 @@
 <?php
+/* 
+ *
+ *   Name: Opentieba P+
+ *   Describe: 用于贴吧的API接口
+ *   Platform: PHP
+ *   Date: 2015-4-26
+ *
+ *      使用方法：
+ *      include("opentieba.php")即可。
+ */
 namespace Opentieba
 {
     require("/OpenTieba_Module/Opentieba.Core.php"); // 此行请勿删除
-    // 在下方放置插件的include，例如：
-    // include("/OpenTieba_Module/Opentieba.Sunbread.Users++.php"); 
-	// 在master中将放置有足够知名度的代码。
-	
-	
-	
 }
-?>
