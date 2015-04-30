@@ -14,7 +14,7 @@ Opentieba 1.5.3 libary version
 <br />
 =========
 
-<p>Now Opentieba has two language: </p>
+<p>Now Opentieba has more languages: </p>
 1.Opentieba For C-Sharp: folder “CSharp”<br />
 2.Opentieba For JavaScript: folder “JS”<br />
 3.Opentieba P+: folder “PHP”, Dev Version<br />
