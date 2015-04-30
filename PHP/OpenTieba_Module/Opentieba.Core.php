@@ -1,7 +1,9 @@
 <?php
+namespace Opentieba;
 class Core // 核心，有关网络通信及BDUSS操作
 {
-    public function Login($username, $password, $vcodemd5 = '', $vcode = '', &$ret = null) // 登录，输入Username与Password与VerifyCodeMD5（验证码标识），VerifyCode（此两默认为空），返回Boolean，且使登入计数器+1
+    public function Login($username, $password, $vcodemd5 = '', $vcode = '', &$ret = null)
+    // 登录，输入Username与Password与VerifyCodeMD5（验证码标识），VerifyCode（此两默认为空），返回Boolean，且使登入计数器+1
     {
         /*
         回调为两大类：
@@ -11,9 +13,9 @@ class Core // 核心，有关网络通信及BDUSS操作
         回调将含有ErrorCode，ErrorMessage，NeedVerifyCode，VerifyCodeMD5，VerifyCodePictureURL。
         （VerifyCodeMD5与VerifyCodePictureURL取决于NeedVerifyCode）
         */
-        $posting = 'un=' . urlencode($username) . '&passwd' + urlencode(base64_encode($password)) . '&vcode_md5=' . $vcodemd5 . '&vcode' . urlencode($vcode)
+        $posting = 'un=' . urlencode($username) . '&passwd=' . urlencode(base64_encode($password)) . '&vcode_md5=' . $vcodemd5 . '&vcode=' . urlencode($vcode);
         $output = $this->StdPost('/c/s/login', $posting);
-        $output = json_decode($output)
+        $output = json_decode($output);
         if ($output == false) return false;
         if ($output->error_code != 0)
         {
@@ -23,7 +25,7 @@ class Core // 核心，有关网络通信及BDUSS操作
                                     'needvcode' => false,
                                     'vcodemd5' => '',
                                     'vcodeurl' => ''
-                                 )
+                                 );
             if (isset($output->anti->need_vcode) and $output->anti->need_vcode == 1)
             {
                 $ret->needvcode = true;
@@ -39,7 +41,7 @@ class Core // 核心，有关网络通信及BDUSS操作
             $ret = (object)array (
                                     'bduss' => $bduss_ ,
                                     'uid' => $uid_
-                                 )
+                                 );
             return true;
         }
     }
@@ -89,9 +91,9 @@ class Core // 核心，有关网络通信及BDUSS操作
         $a_ = $this->getBytes($a);
         $b_ = $this->getBytes($b);
         if (count($a_) < count($b_))
-            array_pad($a_, count($b_), 0);
+            $a_ = array_pad($a_, count($b_), 0);
         if (count($b_) < count($a_))
-            array_pad($b_, count($a_), 0);
+            $b_ = array_pad($b_, count($a_), 0);
         for ($i = 0; $i < count($a_); ++$i) {
             if ($a_[$i] < $b_[$i])
                 return -1;

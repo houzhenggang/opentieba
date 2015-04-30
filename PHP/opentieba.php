@@ -9,7 +9,5 @@
  *      使用方法：
  *      include("opentieba.php")即可。
  */
-namespace Opentieba
-{
-    require("/OpenTieba_Module/Opentieba.Core.php"); // 此行请勿删除
-}
+namespace Opentieba;
+require("/OpenTieba_Module/Opentieba.Core.php"); // 此行请勿删除
