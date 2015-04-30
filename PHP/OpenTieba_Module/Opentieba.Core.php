@@ -1,17 +1,17 @@
 <?php
 namespace Opentieba;
-class Core // ºËĞÄ£¬ÓĞ¹ØÍøÂçÍ¨ĞÅ¼°BDUSS²Ù×÷
+class Core // æ ¸å¿ƒï¼Œæœ‰å…³ç½‘ç»œé€šä¿¡åŠBDUSSæ“ä½œ
 {
     public function Login($username, $password, $vcodemd5 = '', $vcode = '', &$ret = null)
-    // µÇÂ¼£¬ÊäÈëUsernameÓëPasswordÓëVerifyCodeMD5£¨ÑéÖ¤Âë±êÊ¶£©£¬VerifyCode£¨´ËÁ½Ä¬ÈÏÎª¿Õ£©£¬·µ»ØBoolean£¬ÇÒÊ¹µÇÈë¼ÆÊıÆ÷+1
+    // ç™»å½•ï¼Œè¾“å…¥Usernameä¸Passwordä¸VerifyCodeMD5ï¼ˆéªŒè¯ç æ ‡è¯†ï¼‰ï¼ŒVerifyCodeï¼ˆæ­¤ä¸¤é»˜è®¤ä¸ºç©ºï¼‰ï¼Œè¿”å›Booleanï¼Œä¸”ä½¿ç™»å…¥è®¡æ•°å™¨+1
     {
         /*
-        »Øµ÷ÎªÁ½´óÀà£º
-        Èç¹ûÖ÷·µ»ØÎªTrue£¬
-        »Øµ÷Ôòº¬ÓĞBDUSSÓëUserID¡£
-        Èç¹ûÖ÷·µ»ØÎªFalse£¬
-        »Øµ÷½«º¬ÓĞErrorCode£¬ErrorMessage£¬NeedVerifyCode£¬VerifyCodeMD5£¬VerifyCodePictureURL¡£
-        £¨VerifyCodeMD5ÓëVerifyCodePictureURLÈ¡¾öÓÚNeedVerifyCode£©
+        å›è°ƒä¸ºä¸¤å¤§ç±»ï¼š
+        å¦‚æœä¸»è¿”å›ä¸ºTrueï¼Œ
+        å›è°ƒåˆ™å«æœ‰BDUSSä¸UserIDã€‚
+        å¦‚æœä¸»è¿”å›ä¸ºFalseï¼Œ
+        å›è°ƒå°†å«æœ‰ErrorCodeï¼ŒErrorMessageï¼ŒNeedVerifyCodeï¼ŒVerifyCodeMD5ï¼ŒVerifyCodePictureURLã€‚
+        ï¼ˆVerifyCodeMD5ä¸VerifyCodePictureURLå–å†³äºNeedVerifyCodeï¼‰
         */
         $posting = 'un=' . urlencode($username) . '&passwd=' . urlencode(base64_encode($password)) . '&vcode_md5=' . $vcodemd5 . '&vcode=' . urlencode($vcode);
         $output = $this->StdPost('/c/s/login', $posting);
@@ -20,7 +20,7 @@ class Core // ºËĞÄ£¬ÓĞ¹ØÍøÂçÍ¨ĞÅ¼°BDUSS²Ù×÷
         if ($output->error_code != 0)
         {
             $ret = (object)array (
-                                    'errcode' => $output->error_code,
+                                    'errcode' => (int)$output->error_code,
                                     'uid' => mb_convert_encoding($output->error_msg, 'gb2312', 'utf-8'),
                                     'needvcode' => false,
                                     'vcodemd5' => '',
@@ -45,8 +45,8 @@ class Core // ºËĞÄ£¬ÓĞ¹ØÍøÂçÍ¨ĞÅ¼°BDUSS²Ù×÷
             return true;
         }
     }
-    public function Logout() { return false; } // µÇ³ö£¬²»ÊµÏÖ¡£
-    public function StdPost($path, $post = '', $bduss = '') // HttpPostµÄÌù°É°²È«·â×°°æ
+    public function Logout() { return false; } // ç™»å‡ºï¼Œä¸å®ç°ã€‚
+    public function StdPost($path, $post = '', $bduss = '') // HttpPostçš„è´´å§å®‰å…¨å°è£…ç‰ˆ
     {
         $posting = 'BDUSS=' . urlencode($bduss) . '&_client_id=wappc_1397878440657_358&&_client_type=2' . '&_client_version=6.0.0&_phone_imei=000000000000000';
         if (strlen($post) != 0)
@@ -55,14 +55,14 @@ class Core // ºËĞÄ£¬ÓĞ¹ØÍøÂçÍ¨ĞÅ¼°BDUSS²Ù×÷
         usort($sign, array(
             $this,
             'Opentieba_Comparer'
-        )); // Ïàµ±ÓÚ·ÃÎÊ±¾ÀàµÄOpentieba_Comparer·½·¨£¨¶ÔÕÕC#£©
+        )); // ç›¸å½“äºè®¿é—®æœ¬ç±»çš„Opentieba_Compareræ–¹æ³•ï¼ˆå¯¹ç…§C#ï¼‰
         $sign = implode('', $sign) . 'tiebaclient!!!';
         $sign = urldecode($sign);
         $sign = md5($sign);
         $posting .= '&sign=' . strtoupper($sign);
         return $this->HttpPost("http://c.tieba.baidu.com" . $path, $posting);
     }
-    public function HttpPost($url, $post = '', $cookie = '') // CurlµÄ·â×°°æ
+    public function HttpPost($url, $post = '', $cookie = '') // Curlçš„å°è£…ç‰ˆ
     {
         $header[] = 'Accept: */*';
         $header[] = 'User-Agent: Mozilla/4.0 (Windows NT 5.1)';
@@ -78,7 +78,7 @@ class Core // ºËĞÄ£¬ÓĞ¹ØÍøÂçÍ¨ĞÅ¼°BDUSS²Ù×÷
         curl_close($curl);
         return $ret;
     }
-    private function getBytes($string) // ÅÅĞòÆ÷º¯Êıµ÷ÓÃ
+    private function getBytes($string) // æ’åºå™¨å‡½æ•°è°ƒç”¨
     {
         $bytes = array();
         for ($i = 0; $i < strlen($string); $i++) {
@@ -86,7 +86,7 @@ class Core // ºËĞÄ£¬ÓĞ¹ØÍøÂçÍ¨ĞÅ¼°BDUSS²Ù×÷
         }
         return $bytes;
     }
-    private function Opentieba_Comparer($a, $b) // ÅÅĞòÆ÷º¯Êı
+    private function Opentieba_Comparer($a, $b) // æ’åºå™¨å‡½æ•°
     {
         $a_ = $this->getBytes($a);
         $b_ = $this->getBytes($b);
